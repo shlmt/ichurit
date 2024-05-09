@@ -172,8 +172,9 @@ const deleteLate = async (req, res) => {
         const late = await Late.findById(id).exec()
         if (!late)
             return res.status(401).json({ msg: 'החריגה המבוקשת לא נמצאה' })
+        const msg = `ה${late.type} נמחק בהצלחה`
         const del = await late.deleteOne()
-        res.status(201).json({ msg: `חריגה נמחקה בהצלחה` })
+        res.status(201).json({ msg })
     }
     catch (err) {
         return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})

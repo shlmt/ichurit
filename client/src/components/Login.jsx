@@ -42,6 +42,7 @@ const Login = () => {
             <br />
             <Password pt={{ input: { style: { width: '100%' } } }} placeholder="סיסמה" feedback={false} toggleMask style={{ marginBottom: '10px' }} onChange={(e) => setPassword(e.target.value)} />
             <br />
+            <br />
             <Button label="כניסה" onClick={handleSubmit} />
         </Card>
     </>)

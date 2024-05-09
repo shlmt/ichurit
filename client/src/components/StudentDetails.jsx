@@ -45,7 +45,7 @@ const StudentDetails = (props) => {
         if (resUp.isSuccess) {
             let details = `${name.current.value} ${idNum.current.value} עודכנה בהצלחה`
             toast.current.show({ severity: 'success', summary: `פרטי תלמידה עודכנו בהצלחה`, detail: details, life: 3000 })
-            props.refetch()
+            // props.refetch()
         }
         if (resUp.isError) {
             let det = resUp?.error?.data?.msg || 'ארעה שגיאה. נסה שוב מאוחר יותר'

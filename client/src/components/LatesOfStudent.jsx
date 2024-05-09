@@ -129,7 +129,9 @@ const LatesOfStudent = (props) => {
             const jewishDate = toJewishDate(date)
             const jewishDateInHebrewStr = formatJewishDateInHebrew(jewishDate)
             const offset = date.getTimezoneOffset() / 60 * -1
-            let details = `${props.name} ${jewishDateInHebrewStr} ${hour?.getHours() - offset}:${hour?.getMinutes()}`
+            let details = `${props.name} ${jewishDateInHebrewStr}`
+            console.log(resUp.originalArgs.type, resUp.originalArgs.type!='חיסור')
+            if(resUp.originalArgs.type!='חיסור') details+=` ${hour?.getHours() - offset}:${hour?.getMinutes()}`
             toast.current.show({ severity: 'success', summary: `${resUp.originalArgs.type} עודכן בהצלחה`, detail: details, life: 3000 })
         }
         if (resUp.isError) {
@@ -140,8 +142,7 @@ const LatesOfStudent = (props) => {
 
     useEffect(() => {
         if (resDel.isSuccess) {
-            let details = ``
-            toast.current.show({ severity: 'success', summary: `נמחק בהצלחה`, detail: details, life: 3000 })
+            toast.current.show({ severity: 'success', summary: resDel.data.msg, life: 3000 })
         }
         if (resDel.isError) {
             let det = resDel?.error?.data?.msg || 'ארעה שגיאה. נסה שוב מאוחר יותר'

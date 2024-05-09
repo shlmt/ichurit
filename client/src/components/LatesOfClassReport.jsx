@@ -65,7 +65,8 @@ const LatesOfClassReport = (props) => {
     const sendMail = () => {
         const html = renderToString(
             <div ref={(el) => componentRef = el}>
-                <h2 style={{ color: "#6381AC" }}>{`דוח נוכחות לכיתה ${grade}${number}`}</h2>
+                <h2 style={{ color: "#6381AC" }}>דוח נוכחות לכיתה ${grade}${number}</h2>
+                <h3 style={{ color: "#6381AC",marginTop:'-10px' }}>מתאריך ${dateBodyExport(startDate)} עד תאריך ${dateBodyExport(endDate)}</h3>
                 <DataTable responsiveLayout="stack" breakpoint="780px" ref={dt} value={students} rows={students.length} tableStyle={{ width: '80%', minWidth: '400px', marginRight: '10%', marginBottom: '25px' }}
                     emptyMessage="אין חריגות נוכחות העונות על התנאי המבוקש">
                     <Column field="student.name" header="שם התלמידה" alignHeader='center' style={{ width: '21.25%', minWidth: '100%' }} ></Column>
@@ -92,7 +93,7 @@ const LatesOfClassReport = (props) => {
                 <ReactToPrint
                     trigger={() => <Button label="&nbsp;הדפסה" icon="pi pi-print" severity='secondary' style={{ margin: '10px' }} />}
                     content={() => componentRef}
-                    documentTitle='מצטיינות'
+                    documentTitle={`דוח נוכחות לכיתה ${grade}${number} מתאריך ${dateBodyExport(startDate)} עד תאריך ${dateBodyExport(endDate)}`}
                     onPrintError={() => toast.current.show({ severity: 'error', summary: 'שגיאת הדפסה', detail: 'נסו שוב מאוחר יותר', life: 3000 })}
                 />
             </div>
@@ -112,7 +113,8 @@ const LatesOfClassReport = (props) => {
         <>
             <Toolbar className="mb-4" right={toolbarTemplate} style={{ width: '50%', marginRight: '25%' }}></Toolbar><br />
             <div ref={(el) => componentRef = el}>
-                <h2 style={{ color: "#6381AC" }}>{`דוח נוכחות לכיתה ${grade}${number} מתאריך ${dateBodyExport(startDate)} עד תאריך ${dateBodyExport(endDate)}`}</h2>
+                <h2 style={{ color: "#6381AC" }}>דוח נוכחות לכיתה ${grade}${number}</h2>
+                <h3 style={{ color: "#6381AC",marginTop:'-10px' }}>מתאריך ${dateBodyExport(startDate)} עד תאריך ${dateBodyExport(endDate)}</h3>
                 <DataTable responsiveLayout="stack" breakpoint="780px" ref={dt} value={students} rows={students.length} tableStyle={{ width: '80%', minWidth: '400px', marginRight: '10%', marginBottom: '25px' }}
                     emptyMessage="אין חריגות נוכחות העונות על התנאי המבוקש" exportFilename={`דוח נוכחות לכיתה ${grade}${number} מתאריך ${dateBodyExport(startDate)} עד תאריך ${dateBodyExport(endDate)}`}>
                     <Column field="student.name" header="שם התלמידה" alignHeader='center' style={{ width: '21.25%', minWidth: '100%' }} ></Column>

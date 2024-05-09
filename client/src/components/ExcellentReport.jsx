@@ -1,5 +1,5 @@
 import { DataTable } from "primereact/datatable"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import "react-jewish-datepicker/dist/index.css"
 import { Column } from "primereact/column"
 import { useGetGoodStudentsQuery } from '../features/late/lateApiSlice'
@@ -8,12 +8,16 @@ import { Toolbar } from "primereact/toolbar"
 import ReactToPrint from "react-to-print"
 import { Toast } from "primereact/toast"
 import { toJewishDate, formatJewishDateInHebrew } from "jewish-date"
+import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup"
+import { InputText } from "primereact/inputtext"
+import { renderToString } from "react-dom/server"
+import { useSendEmailMutation } from "../features/email/mailApiSlice"
 
 const ExcellentReport = (props) => {
 
     const toast = useRef(null)
 
-    const { startDate, endDate, maxSum } = props.filter
+    const { startDate, endDate, maxSum} = props.filter
     const { data: goodStudents = [], result } = useGetGoodStudentsQuery({ startDate, endDate, maxSum })
 
     const classBodyTemplate = (rowData) => {
@@ -31,15 +35,72 @@ const ExcellentReport = (props) => {
     }
 
     let componentRef = useRef()
+    
+    const [send, resSend] = useSendEmailMutation()
+    const emailAddress = useRef('')
+    const sendMail = () => {
+        const html = renderToString(
+            <div ref={(el) => componentRef = el}>
+                <h2 style={{ color: "#6381AC" }}>מצטיינות</h2>
+                <h3 style={{ color: "#6381AC",marginTop:'-10px' }}>מתאריך {dateBodyExport(startDate)} עד תאריך {dateBodyExport(endDate)}</h3>
+                <DataTable responsiveLayout="stack" breakpoint="600px" ref={dt} value={goodStudents} rows={goodStudents.length} tableStyle={{ width: '50%', marginRight: '25%', marginBottom: '25px' }}
+                    emptyMessage="אין תלמידות שעונות על הסינון המבוקש" exportFilename={`מצטיינות מתאריך ${dateBodyExport(startDate)} עד תאריך ${dateBodyExport(endDate)}`} alignHeader='center' /*sortMode="multiple" multiSortMeta={multiSortMeta}*/>
+                    <Column field="name" header="שם התלמידה" headerStyle={{ textAlign: 'center' }} alignHeader='center' ></Column>
+                    <Column field="class1.grade" exportField={classExport} body={classBodyTemplate} header="כיתה" alignHeader='center' ></Column>
+                </DataTable>
+            </div>
+        )
+        send({ to: [emailAddress.current.value], title: `מצטיינות מתאריך ${dateBodyExport(startDate)} עד תאריך ${dateBodyExport(endDate)}` , html })
+    }
+
+    const accept = () => {
+        sendMail()
+        emailAddress.current = ''
+    }
+
+    const reject = () => {
+        emailAddress.current = ''
+    }
+
+    const showTemplate = (event) => {
+        confirmPopup({
+            target: event.currentTarget,
+            group: 'templating',
+            header: 'Confirmation',
+            message: (
+                <div className="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+                    <i className="pi pi-envelope text-6xl text-primary-500"></i>
+                    <InputText id="username" value={emailAddress.current.value} ref={emailAddress} placeholder="כתובת מייל" inputMode="email" keyfilter='email' required style={{direction:'ltr',marginRight:'20px'}}/>
+                </div>
+            ),
+            acceptIcon: 'pi pi-check',
+            rejectIcon: 'pi pi-times',
+            acceptLabel:'אישור',
+            rejectLabel:'ביטול',
+            rejectClass: 'p-button-sm',
+            acceptClass: 'p-button-outlined p-button-sm',
+            accept,
+            reject
+        })
+    }
+
+    useEffect(() => {
+        if (resSend.isError)
+            toast.current.show({ severity: 'error', summary: 'ארעה שגיאה בשליחה', detail: 'נסו שוב מאוחר יותר', life: 3000 })
+        else if (resSend.isSuccess) toast.current.show({ severity: 'success', summary: 'ההודעה נשלחה בהצלחה', detail: resSend?.data?.msg || "", life: 3000 })
+    }, [resSend])
+
 
     const toolbarTemplate = () => {
         return (
             <div className="flex flex-wrap gap-2">
+                <ConfirmPopup group="templating"/>
+                <Button label="&nbsp;שליחה במייל" icon="pi pi-send" outlined onClick={showTemplate} style={{margin:'10px'}}/> 
                 <Button label="&nbsp;ייצוא" icon="pi pi-file-export" onClick={exportCSV} style={{ margin: '10px' }} />
                 <ReactToPrint
                     trigger={() => <Button label="&nbsp;הדפסה" icon="pi pi-print" severity='secondary' style={{ margin: '10px' }} />}
                     content={() => componentRef}
-                    documentTitle='מצטיינות'
+                    documentTitle={`מצטיינות מתאריך ${dateBodyExport(startDate)} עד תאריך ${dateBodyExport(endDate)}`}
                     onPrintError={() => toast.current.show({ severity: 'error', summary: 'שגיאת הדפסה', detail: 'נסו שוב מאוחר יותר', life: 3000 })}
                 />
             </div>
@@ -64,9 +125,10 @@ const ExcellentReport = (props) => {
         <>
             <Toolbar className="mb-4" right={toolbarTemplate} style={{ width: '50%', marginRight: '25%' }}></Toolbar><br />
             <div ref={(el) => componentRef = el}>
-                <h2 style={{ color: "#6381AC" }}>מצטיינות מתאריך {dateBodyExport(startDate)} עד תאריך {dateBodyExport(endDate)}</h2>
+                <h2 style={{ color: "#6381AC" }}>מצטיינות</h2>
+                <h3 style={{ color: "#6381AC",marginTop:'-10px' }}>מתאריך {dateBodyExport(startDate)} עד תאריך {dateBodyExport(endDate)}</h3>
                 <DataTable responsiveLayout="stack" breakpoint="600px" ref={dt} value={goodStudents} rows={goodStudents.length} tableStyle={{ width: '50%', marginRight: '25%', marginBottom: '25px' }}
-                    emptyMessage="אין תלמידות שעונות על הסינון המבוקש" exportFilename='מצטיינות' alignHeader='center' /*sortMode="multiple" multiSortMeta={multiSortMeta}*/>
+                    emptyMessage="אין תלמידות שעונות על הסינון המבוקש" exportFilename={`מצטיינות מתאריך ${dateBodyExport(startDate)} עד תאריך ${dateBodyExport(endDate)}`} alignHeader='center' /*sortMode="multiple" multiSortMeta={multiSortMeta}*/>
                     <Column field="name" header="שם התלמידה" headerStyle={{ textAlign: 'center' }} alignHeader='center' ></Column>
                     <Column field="class1.grade" exportField={classExport} body={classBodyTemplate} header="כיתה" alignHeader='center' ></Column>
                 </DataTable>
