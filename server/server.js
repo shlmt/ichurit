@@ -28,7 +28,8 @@ mongoose.connection.once('open',()=>{
 })
 
 mongoose.connection.on("error", err=>{
-    return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'});
+    //return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'});
+    console.log(`ERROR in connect to DB: ${err}`)
 })
 
  
