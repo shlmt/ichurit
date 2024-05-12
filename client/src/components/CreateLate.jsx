@@ -159,7 +159,8 @@ const CreateLate = () => {
                 </div></>}
 
             <br />
-            <InputTextarea id="comment" aria-describedby="comment-help" maxLength={70} value={comment} placeholder='הערה' onChange={(e) => setComment(e.target.value)} rows={2} cols={20} /><br />
+            <InputTextarea id="comment" aria-describedby="comment-help" maxLength={70} value={comment} placeholder='הערה' onChange={(e) => setComment(e.target.value)} rows={2} cols={20}
+            style={{resize:'none'}}/><br />
             <br />
             <Button label="&nbsp;אישור" icon="pi pi-check" onClick={handleSubmit} />
         </Card>

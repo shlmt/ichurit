@@ -8,6 +8,7 @@ import { Checkbox } from "primereact/checkbox"
 import { useDeleteHistoryMutation } from "../features/late/lateApiSlice"
 import { useCreateManyStudentsMutation, useDeleteGrade8Mutation } from "../features/student/studentApiSlice"
 import { useGetAllClassesQuery, useUpdateNewYearMutation } from "../features/class/classApiSlice"
+import { Accordion, AccordionTab } from 'primereact/accordion'
 import ExportExcel from "./ExportExcel"
 import { FileUpload } from "primereact/fileupload"
 import { Carousel } from 'primereact/carousel'
@@ -204,7 +205,17 @@ const StepperNewYear = () => {
                                     <div className="confirmation-content">
                                         <i className="pi pi-arrow-circle-up" style={{ fontSize: '2rem' }} /><br />
                                         <h3>הוספת תלמידות מקובץ</h3>
-                                        <ExportExcel excelData={data} filename={"example"} />
+                                        <ExportExcel excelData={data} filename={"קובץ הוספת תלמידות"} /><br/><br/>
+                                        <Accordion style={{width:'50%',marginRight:'25%'}}>
+                                            <AccordionTab header="הדרכה להשלמת הקובץ">
+                                                <h4>יש להשלים את הפרטים כך:</h4>
+                                                <p>idNum: ת.ז של התלמידה</p>
+                                                <p>name: שם מלא של התלמידה</p>
+                                                <p>grade: כיתת התלמידה</p>
+                                                <p>number: מספר הכיתה של התלמידה</p>
+                                                <h4>חשוב! יש לשים לב שלא יתכן שם זהה של תלמידה באותה כיתה</h4>
+                                            </AccordionTab>
+                                        </Accordion>
                                         <div className="card">
                                             <FileUpload name="file" accept=".xlsx" emptyTemplate={<p className="m-0">גרור ושחרר קובץ אקסל</p>}
                                                 uploadLabel='&nbsp;שמירה ועדכון' cancelLabel='&nbsp;ביטול' chooseLabel='&nbsp;בחירת קובץ'

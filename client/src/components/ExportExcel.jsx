@@ -14,7 +14,7 @@ const ExportExcel = ({ excelData, filename }) => {
     }
 
     return (<>
-        <Button onClick={() => exportToExcel(filename)} outlined icon='pi pi-download'>&nbsp;קובץ למילוי</Button>
+        <Button onClick={() => exportToExcel(filename)} outlined icon='pi pi-download'>&nbsp;קובץ להשלמה</Button>
     </>)
 }
 export default ExportExcel
