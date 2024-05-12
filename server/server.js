@@ -10,6 +10,11 @@ const app = express()
 const PORT = process.env.PORT || 1234
 connectDB()
 
+app.use((req, res, next) => {
+  req.timeout = 60000; // 60000 milliseconds = 1 minute
+  next();
+});
+
 app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.static("public"))
