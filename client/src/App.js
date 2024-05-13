@@ -20,7 +20,7 @@ function App() {
 
    return (<>
          {
-            // isUserLoggedIn ? 
+            isUserLoggedIn ? 
             <>
                <Navbar/>
                <Routes>
@@ -36,11 +36,11 @@ function App() {
                   <Route path='*' element={<NotFound allowed={true}/>}/>
                </Routes>
             </>
-            // :  
-            // <Routes>
-            //    <Route path='/' element={<Login/>}/>
-            //    <Route path='*' element={<NotFound allowed={false}/>}/>
-            // </Routes>
+            :  
+            <Routes>
+               <Route path='/' element={<Login/>}/>
+               <Route path='*' element={<NotFound allowed={false}/>}/>
+            </Routes>
         }
   </>)
 }
