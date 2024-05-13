@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const login = async (req, res) => {
     try {
         const { username, password } = req.body
+        console.log(username+" login: "+new Date().toString())
         if (!username || !password)
             return res.status(400).json({ msg: "חסרים שדות חובה" })
         const user = await User.findOne({ username }).lean()
