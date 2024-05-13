@@ -32,7 +32,6 @@ const Login = () => {
 
     return (<>
         <Toast ref={toastTopCenter} position="top-center" />
-        <br />
         <Card title="כניסת משתמשים" className='md:w-25rem' style={{ textAlign: 'center', width: '40vw', marginTop: '20vh', marginRight: '30vw', justifyItems: 'center' }}>
             <span className="p-input-icon-right">
                 <i className="pi pi-user" />

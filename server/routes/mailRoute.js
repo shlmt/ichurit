@@ -5,12 +5,14 @@ const sendEmailToUser = require('../servises/mail');
 
 router.post('/', (req,res)=>{
     try{
-        sendEmailToUser(req.body.to,req.body.title,req.body.html)
+        if(sendEmailToUser(req.body.to,req.body.title,req.body.html))
+            return res.json({ msg: "ההודעה נשלחה בהצלחה" })
+        else res.status(401).json({ msg: "שליחת ההודעה נכשלה" })
     }
     catch(err){
-        res.status(401).json({ msg: "שליחת ההודעה נכשלה" })
+        console.log(err)
     }
-    res.json({ msg: "ההודעה נשלחה בהצלחה" })
+    
 })
 
 module.exports = router

@@ -117,7 +117,7 @@ const CreateLate = () => {
                     autoFocus
                     value={viewName}
                     style={{ textAlign: 'center' }}
-                    placeholder='שם התלמידה'
+                    placeholder='חיפוש תלמידה'
                     suggestions={filteredStudents} completeMethod={search}
                     itemTemplate={itemTemplate}
                     onChange={(e) => {

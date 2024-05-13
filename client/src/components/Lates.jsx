@@ -41,7 +41,7 @@ const Lates = () => {
                         autoFocus
                         value={viewName}
                         style={{ textAlign: 'center' }}
-                        placeholder='שם התלמידה'
+                        placeholder='חיפוש תלמידה'
                         suggestions={filteredStudents} completeMethod={searchStudent}
                         itemTemplate={itemTemplateS}
                         onChange={(e) => {

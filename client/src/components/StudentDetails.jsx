@@ -115,7 +115,7 @@ const StudentDetails = (props) => {
                 <Button label="&nbsp;ביטול" icon="pi pi-times" onClick={() => { setVisible(false) }} className="p-button-text" />
             </div>
             }>
-            <InputText placeholder='שם התלמידה' ref={name} defaultValue={props.name} /> <br /><br />
+            <InputText placeholder='חיפוש תלמידה' ref={name} defaultValue={props.name} /> <br /><br />
             <InputText placeholder='מספר זהות' ref={idNum} maxLength={9} minLength={9} keyfilter="pint" defaultValue={props.idNum} /> <br /><br />
             <AutoComplete
                 value={viewClass}

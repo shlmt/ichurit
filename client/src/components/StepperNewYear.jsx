@@ -100,11 +100,11 @@ const StepperNewYear = () => {
     useEffect(() => {
         if (resUploadStudents.isError) {
             if (resUploadStudents.error.status == 400)
-                toast.current.show({ severity: 'warn', summary: `הקובץ עלה כמעט בהצלחה`, detail: resUploadStudents?.error?.data?.msg || "", life: 3000 })
+                toast.current.show({ severity: 'warn', summary: `הקובץ עלה כמעט בהצלחה`, detail: resUploadStudents?.error?.data?.msg || "", sticky: true })
             else toast.current.show({ severity: 'error', summary: `ארעה שגיאה בהעלאת הקובץ`, detail: resUploadStudents?.error?.data?.msg || "", life: 3000 })
         }
         else if (resUploadStudents.isSuccess)
-            toast.current.show({ severity: 'success', summary: `הקובץ הועלה בהצלחה`, detail: "כל התלמידות התעדכנו כראוי", sticky: true })
+            toast.current.show({ severity: 'success', summary: `הקובץ הועלה בהצלחה`, detail: "כל התלמידות התעדכנו כראוי", life: 3000 })
     }, [resUploadStudents])
 
 
