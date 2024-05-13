@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 
 const sendEmail =  (to,title,body)=>{
   const mailOptions = {
-      from: process.env.EMAIL_ADDRESS,
+      from: 'תוכנת איחורית ⏰ <process.env.EMAIL_ADDRESS>' ,
       to: to,
       subject: title,
       html: body
@@ -28,7 +28,7 @@ const sendEmailToUser = (to,title,body)=>{
       })
       .catch(error => {
           console.log('Error sending email: ', error);
-          throw error
+          //throw error
       });
 }
 
