@@ -27,7 +27,9 @@ const Login = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         const formData = { username, password }
-        loginFunc(formData)
+        if(!username || ! password)
+            toastTopCenter.current.show({ severity: 'error', summary: "חסר שדה חובה", detail: "יש למלא שם משתמש וסיסמה", life: 2000 })
+        else loginFunc(formData)
     }
 
     return (<>

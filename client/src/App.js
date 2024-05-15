@@ -13,6 +13,7 @@ import LatesForMarksFilter from './components/LatesForMarksFilter'
 import NotFound from './components/NotFound'
 import StepperNewYear from './components/StepperNewYear'
 import EditPassword from './components/EditPassword'
+import Footer from './components/Footer'
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
                <Route path='*' element={<NotFound allowed={false}/>}/>
             </Routes>
         }
+      <Footer/>
   </>)
 }
 
