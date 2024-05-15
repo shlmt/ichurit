@@ -77,7 +77,7 @@ const Class = (props) => {
                 <Button label="&nbsp;ביטול" icon="pi pi-times" onClick={() => setVisible(false)} className="p-button-text" />
             </div>
             }>
-            <InputText placeholder='שכבה' ref={grade} defaultValue={props.grade} /> <br /><br />
+            <InputText placeholder='שכבה' ref={grade} defaultValue={props.grade} keyfilter={/^[\u0590-\u05ea]+$/i}/> <br /><br />
             <InputText placeholder='מספר כיתה' ref={number} keyfilter="pint" defaultValue={props.number} /> <br /><br />
             <InputText placeholder='מחנכת' ref={teacher} defaultValue={props.teacher} /><br /><br />
             <InputText placeholder='מייל מחנכת הכיתה' ref={email} defaultValue={props.email} />

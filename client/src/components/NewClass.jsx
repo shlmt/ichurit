@@ -53,7 +53,7 @@ const NewClass = () => {
                     <Button label="&nbsp;ביטול" icon="pi pi-times" onClick={() => setVisible(false)} className="p-button-text" />
                 </div>
                 }>
-                <InputText placeholder='שכבה' ref={grade} /> <br /><br />
+                <InputText placeholder='שכבה' ref={grade} keyfilter={/^[\u0590-\u05ea]+$/i}/> <br /><br />
                 <InputText placeholder='מספר כיתה' ref={number} keyfilter="pint" /> <br /><br />
                 <InputText placeholder='מחנכת' ref={teacher} /><br /><br />
                 <InputText placeholder='מייל מחנכת הכיתה' ref={email} />
