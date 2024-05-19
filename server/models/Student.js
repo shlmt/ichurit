@@ -20,6 +20,10 @@ const Student = new mongoose.Schema({
     comment:{
         type:String,
         maxLength: 70
+    },
+    user:{
+        type:mongoose.SchemaTypes.ObjectId,
+        require:true
     }
 })
 

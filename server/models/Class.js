@@ -20,6 +20,10 @@ const Class = new mongoose.Schema({
     email:{
         type:mongoose.SchemaTypes.Email,
         require:true,
+    },
+    user:{
+        type:mongoose.SchemaTypes.ObjectId,
+        require:true
     }
 }
 )

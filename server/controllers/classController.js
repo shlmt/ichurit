@@ -4,7 +4,7 @@ const Student = require('../models/Student')
 
 const getAllClasses = async (req,res)=>{
     try{
-    const classList = await Class.find().sort({grade:1,number:1})
+    const classList = await Class.find({user:req.user._id}).sort({grade:1,number:1})
     if(!classList)
         return res.status(400).json({msg:"לא נמצאו כיתות"})
     res.json(classList)
@@ -20,11 +20,11 @@ const addClass = async (req,res)=>{
         if(!grade || !teacher|| !email)
             return res.status(400).json({msg:"חסרים שדות חובה"})
         if(!number) number=1
-        const dup = await Class.findOne({grade,number}).lean()
+        const dup = await Class.findOne({user:req.user._id,grade,number}).lean()
         if(dup)
             return res.status(409).json({msg:'קיימת כבר כיתה בשם זה'})
         try{
-            const class1 = await Class.create({grade,number,teacher,email})
+            const class1 = await Class.create({grade,number,teacher,email,user:req.user._id})
             if(!class1)
                 return res.status(400).json({msg:'ארעה שגיאה בהוספת הכיתה'})
             res.status(201).json({msg:`כיתה חדשה ${grade}'${number} נוצרה בהצלחה`})
@@ -48,12 +48,12 @@ const updateClass = async (req,res)=>{
         return res.status(400).json({msg:"id is required"})
     if(number<1)
         return res.status(404).json({msg:"מספר כיתה לא תקין"})
-    const findClass = await Class.findById(id).exec()
+    const findClass = await Class.findOne({_id:id,user:req.user._id}).exec()
     if(!findClass)
         return res.status(400).json({msg:'הכיתה המבוקשת לא נמצאה'})
     const num = number || findClass.number
     const gr = grade || findClass.grade
-    const dup = await Class.findOne({_id:{$ne:id},grade:gr,number:num}).lean()
+    const dup = await Class.findOne({_id:{$ne:id},user:req.user._id,grade:gr,number:num}).lean()
     if(dup)
         return res.status(409).json({msg:'קיימת כבר כיתה בשם זה'})
     findClass.grade = gr
@@ -79,7 +79,7 @@ const updateClass = async (req,res)=>{
 
 const updateNewYear = async(req,res)=>{
     try{
-    const classes = await Class.find({grade:['א','ב','ג','ד','ה','ו','ז']}).exec()
+    const classes = await Class.find({grade:['א','ב','ג','ד','ה','ו','ז'],user:req.user._id}).exec()
     if(!classes)
         return res.status(401).json({msg:"לא נמצאו כיתות"})
     classes.forEach(async c => {
@@ -99,14 +99,14 @@ const deleteClass = async (req,res)=>{
     const {id} = req.params
     if(!id)
         return res.status(400).json({msg:"id is required"})
-    const foundClass = await Class.findById(id).exec()
+    const foundClass = await Class.findOne({_id:id,user:req.user._id}).exec()
     if(!foundClass)
         return res.status(400).json({msg:'הכיתה המבוקשת לא נמצאה'})
-    const students=await Student.find({class1:id}).exec()
+    const students=await Student.find({class1:id,user:req.user._id}).exec()
     students.forEach(async s=>{
         const delLate=await Late.deleteMany({student:s._id})
     })
-    const delstudent=await Student.deleteMany({class1:id})
+    const delstudent=await Student.deleteMany({class1:id,user:req.user._id})
     const delClass = await foundClass.deleteOne()
     const msg=`כיתה ${foundClass.grade}'${foundClass.number} נמחקה, נמחקו ${delstudent.deletedCount} תלמידות`
     res.json({msg})

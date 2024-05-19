@@ -17,7 +17,7 @@ async function importDataFromExcel(workbook) {
                 errors+=numLine+","
                 continue
             }
-            const classData = await Class.findOne({ grade: data.grade, number: data.number })
+            const classData = await Class.findOne({ grade: data.grade, number: data.number,user:req.user._id })
             console.log(data.grade,data);
             if (!classData) {
                 console.error('Class not found for:', data);
@@ -29,7 +29,7 @@ async function importDataFromExcel(workbook) {
                     errors+=numLine+","
                     continue
                 }
-                const dup = await Student.findOne({name:data.name,class1:classData._id}).lean()
+                const dup = await Student.findOne({name:data.name,class1:classData._id,user:req.user._id}).lean()
                 if(dup){
                     errors+=numLine+","
                     continue
@@ -38,7 +38,8 @@ async function importDataFromExcel(workbook) {
                     idNum: data.idNum,
                     name: data.name,
                     class1: classData._id,
-                    comment:""
+                    comment:"",
+                    user:req.user._id
                 })
                 await student.save();
                 console.log('Data saved:', data);
