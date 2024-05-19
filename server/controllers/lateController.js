@@ -5,10 +5,10 @@ const getLatesByStudent = async (req, res) => {
     try {
         const { id } = req.params
         if (!id)
-            return res.status(401).json({ msg: 'id is required' })
+            return res.status(400).json({ msg:"מספר זהות הוא שדה חובה"})
         const lates = await Late.find({ student: id,user:req.user._id }).sort({ time: -1 })
         if (!lates)
-            return res.status(400).json({ msg: "לא נמצאו חריגות" })
+            return res.status(404).json({ msg: "לא נמצאו חריגות" })
         res.json(lates)
     }
     catch (err) {
@@ -22,11 +22,11 @@ const getLatesByClass = async (req, res) => {
         const { startDate } = req.query || new Date(2000, 1, 1) //שחר ההיסטוריה
         const { endDate } = req.query || new Date() //היום
         if (!id)
-            return res.status(401).json({ msg: 'id is required' })
+            return res.status(400).json({ msg:"מספר זהות הוא שדה חובה"})
         const ids = await Student.find({ class1: id,user:req.user._id }, { id: 1 })
         const lates = await Late.find({ user:req.user._id,time: { $gte: startDate, $lte: endDate }, student: { $in: ids } }).populate("student", { name: 1 }).sort({ name: 1, time: 1 })
         if (!lates)
-            return res.status(400).json({ msg: "לא נמצאו חריגות" })
+            return res.status(404).json({ msg: "לא נמצאו חריגות" })
         res.json(lates)
     }
     catch (err) {
@@ -40,11 +40,11 @@ const getCountByClass = async (req, res) => {
         const { startDate } = req.query || new Date(2000, 1, 1) //שחר ההיסטוריה
         const { endDate } = req.query || new Date() //היום
         if (!id)
-            return res.status(401).json({ msg: 'id is required' })
+            return res.status(400).json({ msg:"מספר זהות הוא שדה חובה"})
         const ids = await Student.find({ class1: id,user:req.user._id }, { id: 1 })
         const lates = await Late.find({ time: { $gte: startDate, $lte: endDate }, student: { $in: ids },user:req.user._id })
         if (!lates)
-            return res.status(400).json({ msg: "לא נמצאו חריגות" })
+            return res.status(404).json({ msg: "לא נמצאו חריגות" })
         res.json(lates.length)
     }
     catch (err) {
@@ -56,10 +56,12 @@ const getLatesForMarks = async (req, res) => {
     try {
         const { id } = req.params
         if (!id)
-            return res.status(401).json({ msg: 'id is required' })
+            return res.status(400).json({ msg:"מספר זהות הוא שדה חובה"})
         const { startDate } = req.query || new Date(2000, 1, 1) //שחר ההיסטוריה
         const { endDate } = req.query || new Date() //היום
         const students = await Student.find({ class1: id,user:req.user._id }, { id: 1, name: 1 })
+        if(!students)
+            return res.status(404).json({ msg: "לא נמצאו תלמידות העונות על הסינון המבוקש" })
         const studentsDetails = []
         for(const s of students){
             const name = s.name
@@ -82,7 +84,7 @@ const getGoodStudents = async (req, res) => {
         const { endDate } = req.query || new Date() //היום
         const lates = await Late.find({ type: { $in: ['איחור', 'איחור מאושר'] },user:req.user._id, time: { $gte: startDate, $lte: endDate } })
         if (!lates)
-            return res.status(400).json({ msg: "לא נמצאו חריגות" })
+            return res.status(404).json({ msg: "לא נמצאו חריגות" })
         var dict = {}
         lates.forEach(l => {
             dict[l.student] ? dict[l.student] += 1 : dict[l.student] = 1
@@ -90,7 +92,7 @@ const getGoodStudents = async (req, res) => {
         const ids = Object.keys(dict).filter(x => dict[x] > maxSum) //מי שחרגה
         const goodStudents = await Student.find({ _id: { $nin: ids },user:req.user._id }).populate('class1',{grade:1,number:1}).sort({ class1:1, name: 1 })
         if (!goodStudents)
-            return res.status(400).json({ msg: 'אין תלמידות שעונות על התנאי המבוקש' })
+            return res.status(404).json({ msg: 'אין תלמידות שעונות על התנאי המבוקש' })
         return res.json(goodStudents)
     }
     catch (err) {
@@ -102,9 +104,8 @@ const getGoodStudents = async (req, res) => {
 const addLate = async (req, res) => {
     try {
         const {studentId, time, type, comment } = req.body
-        if (!studentId || !time || !type){
-            console.log(req.body);
-            return res.status(400).json({ msg: "חסרים שדות חובה" })}
+        if (!studentId || !time || !type)
+            return res.status(400).json({ msg: "חסרים שדות חובה" })
         if (!type in ["איחור", "איחור מאושר", "חיסור"])
             return res.status(400).json({ msg: 'סוג חריגה לא חוקי' })
         if (comment && comment.length > 70)
@@ -115,10 +116,10 @@ const addLate = async (req, res) => {
         end=new Date(end.setHours(23,59,59))
         const lateExist = await Late.findOne({student:studentId, time:{$gte:start,$lte:end},user:req.user._id})
         if(lateExist)
-            return res.status(400).json({msg:'קיימת כבר חריגת נוכחות ביום זה'})
+            return res.status(409).json({msg:'קיימת כבר חריגת נוכחות ביום זה'})
         const late = await Late.create({ student: studentId, time, type, comment,user:req.user._id })
         if (!late)
-            return res.status(400).json({ msg: 'ארעה שגיאה בהוספת החריגה' })
+            return res.status(503).json({ msg: 'ארעה שגיאה בהוספת החריגה' })
         return res.status(201).json({ msg: 'חריגות נוכחות נוספו בהצלחה' })
     }
     catch (err) {
@@ -131,10 +132,10 @@ const updateLate = async (req, res) => {
         const { id } = req.params
         const { studentId, time, type, comment } = req.body
         if (!id)
-            return res.status(400).json({ msg: 'id is required' })
+            return res.status(400).json({ msg:"מספר זהות הוא שדה חובה"})
         const late = await Late.findOne({_id:id,user:req.user._id}).exec()
         if (!late)
-            return res.status(401).json({ msg: 'החריגה המבוקשת לא נמצאה' })
+            return res.status(404).json({ msg: 'החריגה המבוקשת לא נמצאה' })
         if (time) {
             late.time = time
             let start=new Date(time.slice(0,10))
@@ -143,7 +144,7 @@ const updateLate = async (req, res) => {
             end=new Date(end.setHours(23,59,59))
             const lateExist = await Late.findOne({_id:{$ne:id},user:req.user._id,student:studentId, time:{$gte:start,$lte:end}})
             if(lateExist){
-                return res.status(400).json({msg:'קיימת כבר חריגת נוכחות ביום זה'})
+                return res.status(409).json({msg:'קיימת כבר חריגת נוכחות ביום זה'})
             }
         }
         if (type) {
@@ -156,7 +157,7 @@ const updateLate = async (req, res) => {
         late.comment = comment
         const updated = await late.save()
         if (!updated)
-            return res.status(400).json({ msg: 'ארעה שגיאה בעדכון החריגה' })
+            return res.status(503).json({ msg: 'ארעה שגיאה בעדכון החריגה' })
         return res.status(201).json({ msg: `חריגה עודכנה בהצלחה` })
     }
     catch (err) {
@@ -169,10 +170,10 @@ const deleteLate = async (req, res) => {
         const { id } = req.params
         const late = await Late.findOne({_id:id,user:req.user._id}).exec()
         if (!late)
-            return res.status(401).json({ msg: 'החריגה המבוקשת לא נמצאה' })
+            return res.status(404).json({ msg: 'החריגה המבוקשת לא נמצאה' })
         const msg = `ה${late.type} נמחק בהצלחה`
         const del = await late.deleteOne()
-        res.status(201).json({ msg })
+        res.status(200).json({ msg })
     }
     catch (err) {
         return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
@@ -182,7 +183,7 @@ const deleteLate = async (req, res) => {
 const deleteHistory = async (req, res) => {
     try {
         await Late.deleteMany({user:req.user._id})
-        res.status(201).json({ msg: 'ההיסטוריה נמחקה' })
+        res.status(200).json({ msg: 'ההיסטוריה נמחקה' })
     }
     catch (err) {
         return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})

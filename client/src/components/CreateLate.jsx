@@ -151,7 +151,6 @@ const CreateLate = () => {
                 </div></div>
             {lateVal != "חיסור" && <><br />
                 <div className="flex justify-content-center" style={{ fontSize: "20px", color: 'GrayText' }}>
-                    {/* <TimePicker showSecond={false} value={hour} defaultValue={moment()} onChange={setHour} placement='bottomRight' focusOnOpen={true} placeholder='שעה'/> */}
                     <div className="flex-auto">
                         <Calendar value={hour} onChange={(e) => setHour(e.value)} showIcon timeOnly icon={() => <i className="pi pi-clock" />}
                             style={{ direction: 'ltr' }} panelStyle={{ direction: 'ltr' }} />

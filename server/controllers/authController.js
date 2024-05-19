@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken')
 const login = async (req, res) => {
     try {
         const { username, password } = req.body
-        console.log(username+" login: "+new Date().toString())
         if (!username || !password)
             return res.status(400).json({ msg: "חסרים שדות חובה" })
         const user = await User.findOne({ username }).lean()
@@ -35,7 +34,7 @@ const createUser = async (req, res) => {
         const userObj = { username, password: hashPass }
         const user = await User.create(userObj)
         if (!user)
-            return res.status(400).json({ msg: 'ארעה שגיאה בהוספת המשתמש' })
+            return res.status(503).json({ msg: 'ארעה שגיאה בהוספת המשתמש' })
         res.status(201).json({ msg: `משתמש חדש ${username} נוסף בהצלחה` })
     }
     catch (err) {
@@ -70,9 +69,6 @@ const deleteUser = async (req, res) => {
         const user = await User.findOne({ username }).exec()
         if (!user)
             return res.status(401).json({ msg: 'המשתמש המבוקש לא נמצא' })
-        const allUsers = await User.find()
-        if(allUsers.length==1)
-            return res.status(408).json({ msg: 'אין למחוק את המשתמש האחרון' })
         const del = user.deleteOne()
         res.json({ msg: `משתמש ${username} נמחק בהצלחה` })
     }

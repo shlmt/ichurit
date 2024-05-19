@@ -86,6 +86,11 @@ const Navbar = () => {
         {
             items: [
                 {
+                    label: 'הוספת משתמש',
+                    icon: 'pi pi-user-plus'
+                    // url: '/'
+                },
+                {
                     label: 'עדכון סיסמה',
                     icon: 'pi pi-user-edit',
                     url: '/editPassword'

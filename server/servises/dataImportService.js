@@ -5,7 +5,6 @@ const Class = require('../models/Class')
 
 async function importDataFromExcel(workbook,req) {
     try {
-        console.log("req"+req);
         const sheetName = workbook.SheetNames[0]
         const worksheet = workbook.Sheets[sheetName]
         let errors = ""
@@ -19,7 +18,6 @@ async function importDataFromExcel(workbook,req) {
                 continue
             }
             const classData = await Class.findOne({ grade: data.grade, number: data.number,user:req.user._id })
-            console.log(data.grade,data);
             if (!classData) {
                 console.error('Class not found for:', data);
                 errors+=numLine+","
@@ -43,14 +41,12 @@ async function importDataFromExcel(workbook,req) {
                     user:req.user._id
                 })
                 await student.save();
-                console.log('Data saved:', data);
             } catch (error) {
                 console.error('Error saving student data:', error);
                 errors+=numLine+","
                 continue
             }
         }
-        console.log('Data import completed.')
         return errors
     }
     catch (error) {

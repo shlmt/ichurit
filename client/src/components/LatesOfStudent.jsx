@@ -75,7 +75,7 @@ const LatesOfStudent = (props) => {
     }
 
     const dateEditor = (options) => {
-        return <ReactJewishDatePicker value={date} isHebrew /*style={{width:'100%'}}*/
+        return <ReactJewishDatePicker value={date} isHebrew
             canSelect={(day) => day.date <= new Date().setHours(23)}
             onClick={(day) => { setDate(day.date) }} />
     }
@@ -130,7 +130,6 @@ const LatesOfStudent = (props) => {
             const jewishDateInHebrewStr = formatJewishDateInHebrew(jewishDate)
             const offset = date.getTimezoneOffset() / 60 * -1
             let details = `${props.name} ${jewishDateInHebrewStr}`
-            console.log(resUp.originalArgs.type, resUp.originalArgs.type!='חיסור')
             if(resUp.originalArgs.type!='חיסור') details+=` ${hour?.getHours() - offset}:${hour?.getMinutes()}`
             toast.current.show({ severity: 'success', summary: `${resUp.originalArgs.type} עודכן בהצלחה`, detail: details, life: 3000 })
         }
@@ -183,7 +182,7 @@ const LatesOfStudent = (props) => {
             <div className="flex flex-wrap gap-2">
                 <Button label="&nbsp;ייצוא" icon="pi pi-file-export" onClick={exportCSV} style={{ margin: '10px' }} />
                 <ReactToPrint
-                    trigger={() => <Button label="&nbsp;הדפסה" icon="pi pi-print" severity='secondary' style={{ margin: '10px' }} /*tooltip='יודפס רק התוכן המוצג על המסך' tooltipOptions={{position:'left'}}*/ />}
+                    trigger={() => <Button label="&nbsp;הדפסה" icon="pi pi-print" severity='secondary' style={{ margin: '10px' }} />}
                     content={() => componentRef}
                     documentTitle={`נוכחות ${props.name} ${props.grade}${props.number}`}
                     onPrintError={() => toast.current.show({ severity: 'error', summary: 'שגיאת הדפסה', detail: 'נסו שוב מאוחר יותר', life: 3000 })}
@@ -209,7 +208,7 @@ const LatesOfStudent = (props) => {
                     <h2 style={{ color: "#6381AC" }}>{`נוכחות ${props.name} ${props.grade}${props.number}`}</h2>
                     <DataTable ref={dt} value={lates} rows={5} id="_id" dataKey="_id" exportFilename={`נוכחות ${props.name} ${props.grade}${props.number}`}
                         editMode="row" onRowEditCancel={() => setCurrEditRaw(null)} onRowEditComplete={onRowEditComplete} onRowEditInit={(e) => rowEditInit(e)}
-                        paginator /*paginatorRight={<></>} paginatorLeft={paginatorLeft}*/ paginatorTemplate="LastPageLink NextPageLink CurrentPageReport PrevPageLink FirstPageLink RowsPerPageDropdown" rowsPerPageOptions={[5, 10, 25, 50]} currentPageReportTemplate="({first} עד {last} מתוך {totalRecords})"
+                        paginator paginatorTemplate="LastPageLink NextPageLink CurrentPageReport PrevPageLink FirstPageLink RowsPerPageDropdown" rowsPerPageOptions={[5, 10, 25, 50]} currentPageReportTemplate="({first} עד {last} מתוך {totalRecords})"
                         emptyMessage="אין חריגות נוכחות" responsiveLayout="stack" breakpoint="1000px" tableStyle={{ width: '90%', minWidth: '280px', marginRight: '5%', marginBottom: '25px' }}>
                         <Column field="type" header="סוג" body={typeBodyTemplate} editor={(options) => typeEditor(options)} style={{ width: '25%', minWidth: '100%' }} alignHeader='center'></Column>
                         <Column field="time" header="תאריך" body={dateBodyTemplate} exportField={dateBodyExport} editor={(options) => dateEditor(options)} style={{ width: '25%', minWidth: '100%' }} alignHeader='center'></Column>
