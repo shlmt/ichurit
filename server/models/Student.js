@@ -4,7 +4,6 @@ const Student = new mongoose.Schema({
     idNum:{
         type:String,
         require:true,
-        unique:true,
         maxLength:9,
         minLength:9
     },

@@ -27,15 +27,15 @@ const createStudent = async (req,res)=>{
         return res.status(400).json({msg:"חסרים שדות חובה"})
     const dup = await Student.findOne({name,class1,user:req.user._id}).lean()
     if(dup)
-        return res.status(409).json({msg:'קיימת כבר תלמידה בשם זה'})
+        return res.status(400).json({msg:'קיימת כבר תלמידה בשם זה'})
     const dup2 = await Student.findOne({idNum,user:req.user._id}).lean()
     if(dup2)
-        return res.status(409).json({msg:'קיימת כבר תלמידה עם מספר זהות זהה'})
+        return res.status(400).json({msg:'קיימת כבר תלמידה עם מספר זהות זהה'})
     if(comment && comment.length>70)
         return res.status(400).json({msg:'אורך הערה מוגבל ל70 תוים'})
     const student = await Student.create({idNum,name,class1,comment,user:req.user._id})
     if(!student)
-        return res.status(400).json({msg:'ארעה שגיאה בהוספת התלמידה'})
+        return res.status(401).json({msg:'ארעה שגיאה בהוספת התלמידה'})
     res.status(201).json({msg:`תלמידה חדשה ${name} נוספה בהצלחה`})
     }
     catch(err){
@@ -47,7 +47,7 @@ const createManyStudents= async(req,res)=>{
     console.log(req.body);
     try{
         const workbook = xlsx.read(req.file.buffer)
-        const errLines = await importDataFromExcel(workbook)
+        const errLines = await importDataFromExcel(workbook,req)
         console.log(errLines)
         if(errLines.length==0) res.status(201).json({msg:"עודכן בהצלחה"})
         else res.status(400).json({msg:"היו שגיאות בשורות הבאות: "+errLines.slice(0,-1)})
@@ -65,9 +65,19 @@ const updateStudent= async (req,res)=>{
     const student = await Student.findOne({_id:id,user:req.user._id}).exec()
     if(!student)
         return res.status(404).json({msg:"לא נמצאו תלמידות"})
-    if(idNum) student.idNum=idNum
+    if(idNum){
+        const dup2 = await Student.findOne({idNum,_id:{$ne:id},user:req.user._id}).lean()
+        if(dup2 )
+            return res.status(400).json({msg:'קיימת כבר תלמידה עם מספר זהות זהה'})
+        student.idNum=idNum
+    }
     if(name) student.name=name
     if(class1) student.class1=class1
+    let n = student.name
+    let c = student.class1
+    const dup = await Student.findOne({_id:{$ne:id},name:n,class1:c,user:req.user._id}).lean()
+    if(dup)
+        return res.status(400).json({msg:'קיימת כבר תלמידה בשם זה'})
     if(comment && comment.length>70)
         return res.status(400).json({msg:'אורך הערה מוגבל ל70 תוים'})
     student.comment = comment
@@ -75,7 +85,7 @@ const updateStudent= async (req,res)=>{
     res.status(201).json({msg:`תלמידה ${name} עודכנה בהצלחה`})
     }
     catch(err){
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+        return res.status(500).json({msg:err+'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
     }
 }
 

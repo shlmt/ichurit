@@ -3,8 +3,9 @@ const xlsx = require('xlsx')
 const Student = require('../models/Student')
 const Class = require('../models/Class')
 
-async function importDataFromExcel(workbook) {
+async function importDataFromExcel(workbook,req) {
     try {
+        console.log("req"+req);
         const sheetName = workbook.SheetNames[0]
         const worksheet = workbook.Sheets[sheetName]
         let errors = ""
