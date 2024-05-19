@@ -77,7 +77,7 @@ const CreateLate = () => {
             toast.current.show({ severity: 'success', summary: `${lateVal} נרשם בהצלחה`, detail: details, life: 3000 })
             setViewName()
             setSelectedStudent()
-            setComment()
+            setComment("")
             setLateVal('איחור')
             setDate(new Date())
             setHour(new Date())
