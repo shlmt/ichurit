@@ -12,6 +12,7 @@ import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup"
 import { InputText } from "primereact/inputtext"
 import { renderToString } from "react-dom/server"
 import { useSendEmailMutation } from "../features/email/mailApiSlice"
+import { Badge } from "primereact/badge"
 
 const ExcellentReport = (props) => {
 
@@ -125,7 +126,12 @@ const ExcellentReport = (props) => {
         <>
             <Toolbar className="mb-4" right={toolbarTemplate} style={{ width: '50%', marginRight: '25%' }}></Toolbar><br />
             <div ref={(el) => componentRef = el}>
-                <h2 style={{ color: "#6381AC" }}>מצטיינות</h2>
+                <h2 style={{ color: "#6381AC" }} className="p-overlay-badge">
+                    <i className="pi pi-users p-overlay-badge" style={{ fontSize: '2rem' }}>
+                        <Badge value={goodStudents?.length||0} />
+                    </i>
+                     &nbsp;מצטיינות 
+                </h2>
                 <h3 style={{ color: "#6381AC",marginTop:'-10px' }}>מתאריך {dateBodyExport(startDate)} עד תאריך {dateBodyExport(endDate)}</h3>
                 <DataTable responsiveLayout="stack" breakpoint="600px" ref={dt} value={goodStudents} rows={goodStudents.length} tableStyle={{ width: '50%', marginRight: '25%', marginBottom: '25px' }}
                     emptyMessage="אין תלמידות שעונות על הסינון המבוקש" exportFilename={`מצטיינות מתאריך ${dateBodyExport(startDate)} עד תאריך ${dateBodyExport(endDate)}`} alignHeader='center' /*sortMode="multiple" multiSortMeta={multiSortMeta}*/>

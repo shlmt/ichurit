@@ -131,6 +131,8 @@ const StepperNewYear = () => {
                                     <div className="confirmation-content">
                                         <i className="pi pi-history mr-3" style={{ fontSize: '2rem' }} /><br />
                                         <h3>למחוק את כל ההיסטוריה?</h3>
+                                        <p>כדאי לייצא קודם קבצים חשובים!</p>
+                                        <br/>
                                         <Checkbox inputId="check" onChange={e => setChecked(e.checked)} checked={checked}></Checkbox><label htmlFor="check" className="ml-2">&nbsp;ידוע לי כי לא ניתן לשחזר לאחר המחיקה</label>
                                     </div>
                                 </Card>

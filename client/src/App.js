@@ -35,7 +35,6 @@ function App() {
                   <Route path='/marks' element={<LatesForMarksFilter/>}/>
                   <Route path='/stepsNewYear' element={<StepperNewYear/>}/>
                   <Route path='/editPassword' element={<EditPassword/>}/>
-                  <Route path='/user' element={<NewUser/>}/>
                   <Route path='*' element={<NotFound allowed={true}/>}/>
                </Routes>
             </>
