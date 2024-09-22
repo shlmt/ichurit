@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const sendEmailToUser = require('../servises/mail');
+const sendEmail = require('../servises/mail');
 
 
 router.post('/', (req,res)=>{
