@@ -1,13 +1,14 @@
 const nodemailer = require('nodemailer')
 
 const transporter = nodemailer.createTransport({
+  service: process.env.EMAIL_SERVICE,
   host: process.env.EMAIL_HOST,
   port: process.env.EMAIL_PORT,
-  secure: false,
+  secure: true,
   auth: {
-      user: process.env.EMAIL_ADDRESS,
-      pass: process.env.EMAIL_PASSWORD
-  }
+    user: process.env.EMAIL_ADDRESS,
+    pass: process.env.EMAIL_PASSWORD,
+  },
 });
 
 const sendEmail =  (to,title,body)=>{
@@ -17,20 +18,8 @@ const sendEmail =  (to,title,body)=>{
       subject: title,
       html: body
   }
-  return transporter.sendMail(mailOptions);
+   return transporter.sendMail(mailOptions);
 }
 
 
-const sendEmailToUser = (to,title,body)=>{
-  sendEmail(to,title,body)
-      .then(info => {
-          console.log('Email sent: ', info.response);
-          return true
-      })
-      .catch(error => {
-          console.log('Error sending email: ', error);
-          return false
-      });
-}
-
-module.exports = sendEmailToUser
+module.exports = sendEmail
