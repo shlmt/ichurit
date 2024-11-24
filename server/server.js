@@ -5,6 +5,7 @@ const corsOptions = require("./config/corsOptions")
 const connectDB = require("./config/dbConn")
 const mongoose = require("mongoose")
 const { verifyJWT } = require("./middleware/verifyJWT")
+const logger = require("./middleware/logger")
 
 const app = express()
 const PORT = process.env.PORT || 1234
@@ -12,6 +13,7 @@ connectDB()
 
 app.use(cors(corsOptions))
 app.use(express.json())
+app.use(logger)
 app.use(express.static("public"))
 app.use("/api/auth", require('./routes/authRoute'))
 app.use(verifyJWT)
@@ -28,8 +30,8 @@ mongoose.connection.once('open',()=>{
 })
 
 mongoose.connection.on("error", err=>{
-    //return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'});
     console.log(`ERROR in connect to DB: ${err}`)
+    return res.status(500).json({msg:'ארעה שגיאה בחיסור למסד הנתונים'});
 })
 
  
