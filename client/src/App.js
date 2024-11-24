@@ -14,7 +14,6 @@ import NotFound from './components/NotFound'
 import StepperNewYear from './components/StepperNewYear'
 import EditPassword from './components/EditPassword'
 import Footer from './components/Footer'
-import NewUser from './components/NewUser'
 
 function App() {
 
