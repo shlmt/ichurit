@@ -20,8 +20,10 @@ const Login = () => {
     useEffect(() => {
         if (isSuccess)
             dispatch(setToken({ data, username }))
-        if (isError)
-            toastTopCenter.current.show({ severity: 'error', summary: "שגיאה", detail: "לא מורשה", life: 2000 })
+        if (isError){
+            let detail = error.status==401 ? "לא מורשה" : 'ארעה שגיאה. נסה שוב מאוחר יותר'
+            toastTopCenter.current.show({ severity: 'error', summary: "שגיאה", detail, life: 2000 })
+        }
     }, [isSuccess, isError])
 
     const handleSubmit = (e) => {
@@ -37,14 +39,28 @@ const Login = () => {
         <Card title="כניסת משתמשים" className='md:w-25rem' style={{ textAlign: 'center', width: '40vw', marginTop: '20vh', marginRight: '30vw', justifyItems: 'center' }}>
             <span className="p-input-icon-right">
                 <i className="pi pi-user" />
-                <InputText type='text' placeholder="שם משתמש" onChange={(e) => setUsername(e.target.value)} style={{ width: '100%' }} />
+                <InputText
+                    type='text'
+                    placeholder="שם משתמש"
+                    style={{ width: '100%' }} 
+                    onChange={(e) => setUsername(e.target.value)}
+                    onKeyDown={(e) => {if(e.key=='Enter') handleSubmit(e)}} 
+                />
             </span>
             <br />
             <br />
-            <Password pt={{ input: { style: { width: '100%' } } }} placeholder="סיסמה" feedback={false} toggleMask style={{ marginBottom: '10px' }} onChange={(e) => setPassword(e.target.value)} />
+            <Password
+                pt={{ input: { style: { width: '100%' } } }}
+                placeholder="סיסמה"
+                feedback={false}
+                toggleMask
+                style={{ marginBottom: '10px' }}
+                onChange={(e) => setPassword(e.target.value)} 
+                onKeyDown={(e) => {if(e.key=='Enter') handleSubmit(e)}} 
+            />
             <br />
             <br />
-            <Button label="כניסה" onClick={handleSubmit} />
+            <Button label="כניסה" onClick={handleSubmit}/>
         </Card>
     </>)
 }
