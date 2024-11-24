@@ -2,7 +2,7 @@ const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-const login = async (req, res) => {
+const login = async (req,res,next) => {
     try {
         const { username, password } = req.body
         if (!username || !password)
@@ -17,12 +17,12 @@ const login = async (req, res) => {
         const token = jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET)
         res.json({ token })
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 
-const createUser = async (req, res) => {
+const createUser = async (req,res,next) => {
     try {
         const { username, password } = req.body
         if (!username || !password)
@@ -37,12 +37,12 @@ const createUser = async (req, res) => {
             return res.status(503).json({ msg: 'ארעה שגיאה בהוספת המשתמש' })
         res.status(201).json({ msg: `משתמש חדש ${username} נוסף בהצלחה` })
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 
-const changePass = async (req, res) => {
+const changePass = async (req,res,next) => {
     try {
         const {newPassword } = req.body
         const { username } = req.user
@@ -56,12 +56,12 @@ const changePass = async (req, res) => {
         const updateUser = await user.save()
         res.json({ msg: "סיסמה  עודכנה בהצלחה" })
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 
-const deleteUser = async (req, res) => {
+const deleteUser = async (req,res,next) => {
     try {
         const { id } = req.params
         if (!id)
@@ -72,8 +72,8 @@ const deleteUser = async (req, res) => {
         const del = user.deleteOne()
         res.json({ msg: `משתמש ${username} נמחק בהצלחה` })
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 

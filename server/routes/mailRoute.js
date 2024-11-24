@@ -3,7 +3,7 @@ const router = express.Router()
 const sendEmail = require('../servises/mail');
 
 
-router.post('/', (req,res)=>{
+router.post('/', (req,res,next)=>{
     const {to,title,html} = req.body
     if(!to || !title || !html) 
         return res.status(400).json({ msg: "חסרים שדות חובה" })

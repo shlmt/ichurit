@@ -1,5 +1,6 @@
 const allowedOrigins = [
-    'https://ichurit.onrender.com'
+    'https://ichurit.onrender.com',
+    'http://localhost:3000'
 ]
 
 const corsOptions = {

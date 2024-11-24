@@ -14,7 +14,7 @@ const verifyJWT = (req,res,next) => {
     }
     )}
     catch(err){
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+        next(err)
     }
 }
 

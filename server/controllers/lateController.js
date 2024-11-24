@@ -1,7 +1,7 @@
 const Late = require('../models/Late')
 const Student = require('../models/Student');
 
-const getLatesByStudent = async (req, res) => {
+const getLatesByStudent = async (req,res,next) => {
     try {
         const { id } = req.params
         if (!id)
@@ -11,12 +11,12 @@ const getLatesByStudent = async (req, res) => {
             return res.status(404).json({ msg: "לא נמצאו חריגות" })
         res.json(lates)
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 
-const getLatesByClass = async (req, res) => {
+const getLatesByClass = async (req,res,next) => {
     try {
         const { id } = req.params
         const { startDate } = req.query || new Date(2000, 1, 1) //שחר ההיסטוריה
@@ -29,12 +29,12 @@ const getLatesByClass = async (req, res) => {
             return res.status(404).json({ msg: "לא נמצאו חריגות" })
         res.json(lates)
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 
-const getCountByClass = async (req, res) => {
+const getCountByClass = async (req,res,next) => {
     try {
         const { id } = req.params
         const { startDate } = req.query || new Date(2000, 1, 1) //שחר ההיסטוריה
@@ -47,12 +47,12 @@ const getCountByClass = async (req, res) => {
             return res.status(404).json({ msg: "לא נמצאו חריגות" })
         res.json(lates.length)
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 
-const getLatesForMarks = async (req, res) => {
+const getLatesForMarks = async (req,res,next) => {
     try {
         const { id } = req.params
         if (!id)
@@ -72,12 +72,12 @@ const getLatesForMarks = async (req, res) => {
         }
         return res.json(studentsDetails)
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 
-const getGoodStudents = async (req, res) => {
+const getGoodStudents = async (req,res,next) => {
     try {
         const { maxSum } = req.query || 0
         const { startDate } = req.query || new Date(2000, 1, 1) //שחר ההיסטוריה
@@ -95,13 +95,13 @@ const getGoodStudents = async (req, res) => {
             return res.status(404).json({ msg: 'אין תלמידות שעונות על התנאי המבוקש' })
         return res.json(goodStudents)
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 
 
-const addLate = async (req, res) => {
+const addLate = async (req,res,next) => {
     try {
         const {studentId, time, type, comment } = req.body
         if (!studentId || !time || !type)
@@ -122,12 +122,12 @@ const addLate = async (req, res) => {
             return res.status(503).json({ msg: 'ארעה שגיאה בהוספת החריגה' })
         return res.status(201).json({ msg: 'חריגות נוכחות נוספו בהצלחה' })
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 
-const updateLate = async (req, res) => {
+const updateLate = async (req,res,next) => {
     try {
         const { id } = req.params
         const { studentId, time, type, comment } = req.body
@@ -160,12 +160,12 @@ const updateLate = async (req, res) => {
             return res.status(503).json({ msg: 'ארעה שגיאה בעדכון החריגה' })
         return res.status(201).json({ msg: `חריגה עודכנה בהצלחה` })
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 
-const deleteLate = async (req, res) => {
+const deleteLate = async (req,res,next) => {
     try {
         const { id } = req.params
         const late = await Late.findOne({_id:id,user:req.user._id}).exec()
@@ -175,18 +175,18 @@ const deleteLate = async (req, res) => {
         const del = await late.deleteOne()
         res.status(200).json({ msg })
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 
-const deleteHistory = async (req, res) => {
+const deleteHistory = async (req,res,next) => {
     try {
         await Late.deleteMany({user:req.user._id})
         res.status(200).json({ msg: 'ההיסטוריה נמחקה' })
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 

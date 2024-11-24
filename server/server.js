@@ -6,6 +6,7 @@ const connectDB = require("./config/dbConn")
 const mongoose = require("mongoose")
 const { verifyJWT } = require("./middleware/verifyJWT")
 const logger = require("./middleware/logger")
+const { default: ErrorHandler } = require("./middleware/errorHandler")
 
 const app = express()
 const PORT = process.env.PORT || 1234
@@ -21,6 +22,7 @@ app.use("/api/student", require('./routes/studentRoute'))
 app.use("/api/class", require('./routes/classRoute'))
 app.use("/api/late", require('./routes/lateRoute'))
 app.use("/api/mail", require('./routes/mailRoute'))
+app.use(ErrorHandler)
 
 mongoose.connection.once('open',()=>{
     console.log("connected to mongoDB")
