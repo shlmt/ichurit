@@ -3,13 +3,15 @@ import { Menubar } from 'primereact/menubar'
 import { Avatar } from 'primereact/avatar'
 import { Menu } from 'primereact/menu'
 import { removeToken } from '../features/auth/authSlice'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import apiSlice from '../app/apiSlice'
+import { useLogoutMutation } from '../features/auth/authApiSlice'
 
 const Navbar = () => {
 
-    const userFullName = localStorage.getItem('username') || '?'
+    const {userFullName} = useSelector((state)=>state.auth) || '?'
+    const [logout, res] = useLogoutMutation()
 
     const items = [
         {
@@ -79,6 +81,7 @@ const Navbar = () => {
     const handleLogoutClick = () => {
         dispatch(removeToken())
         dispatch(apiSlice.util.resetApiState())
+        logout()
         navigate("/")
     }
 

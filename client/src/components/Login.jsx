@@ -19,7 +19,7 @@ const Login = () => {
 
     useEffect(() => {
         if (isSuccess)
-            dispatch(setToken({ data, username }))
+            dispatch(setToken({ username }))
         if (isError){
             let detail = error.status==401 ? "לא מורשה" : 'ארעה שגיאה. נסה שוב מאוחר יותר'
             toastTopCenter.current.show({ severity: 'error', summary: "שגיאה", detail, life: 2000 })

@@ -10,12 +10,33 @@ const login = async (req,res,next) => {
         const user = await User.findOne({ username }).lean()
         if (!user)
             return res.status(401).json({ msg: 'משתמש לא מורשה' })
-        const isMatch = await bcrypt.compare(password, user.password)
+        const isMatch = await bcrypt.compare(password+'', user.password)
         if (!isMatch)
             return res.status(401).json({ msg: 'משתמש לא מורשה' })
         const userInfo = { _id: user._id, username: user.username }
         const token = jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET)
-        res.json({ token })
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'PROD',
+            sameSite: 'strict',
+            maxAge: 24 * 60 * 60 * 1000 * 7 // one week = 7 days
+        })
+        res.status(200).json({ message: 'התחבר בהצלחה' });
+    }
+    catch(err){
+        next(err)
+    }
+}
+
+const logout = async (req,res,next) => {
+    try{
+        res.cookie('token', '', { 
+            httpOnly: true, 
+            secure: process.env.NODE_ENV === 'PROD',
+            sameSite: 'strict', 
+            expires: new Date(0) 
+        })
+        res.status(200).json({ message: 'התנתק בהצלחה' })
     }
     catch(err){
         next(err)
@@ -77,4 +98,4 @@ const deleteUser = async (req,res,next) => {
     }
 }
 
-module.exports = { login, createUser, changePass, deleteUser }
+module.exports = { login, logout, createUser, changePass, deleteUser }
