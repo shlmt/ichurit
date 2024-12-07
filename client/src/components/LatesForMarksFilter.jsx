@@ -8,12 +8,17 @@ import { ReactJewishDatePicker, BasicJewishDay } from "react-jewish-datepicker"
 import { Toast } from "primereact/toast"
 
 const LatesForMarksFilter = () => {
-    const { data: classes = [], result } = useGetAllClassesQuery()
+    const { data: classes = [], isLoading, isError, error } = useGetAllClassesQuery()
     const [viewClass, setViewClass] = useState()
     const [selectedClass, setSelectedClass] = useState()
     const [filteredClasses, setFilteredClasses] = useState([])
 
     const toast = useRef(null)
+
+    useEffect(()=>{
+        if (isError) 
+            toast.current.show({ severity: 'error', summary: 'שגיאה בשליפת הכיתות', details: error.error || 'ארעה שגיאה. נסה שוב מאוחר יותר', life: 3000 })
+    },[isError])
 
     useEffect(() => {
         if (selectedClass)

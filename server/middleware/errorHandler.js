@@ -4,7 +4,7 @@ const errorHandler = (err, req, res, next) => {
     const errData = {
         success: false,
         status: errStatus,
-        message: errMsg,
+        msg: errMsg,
         stack: process.env.NODE_ENV === 'DEV' ? err.stack : {}
     }
     console.error(`${req.method} ${req.originalUrl} - ${errMsg} ${err.stack}`)

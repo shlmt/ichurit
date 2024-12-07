@@ -1,16 +1,24 @@
 import { AutoComplete } from "primereact/autocomplete"
 import LatesOfStudent from "./LatesOfStudent"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useGetAllStudentsQuery } from "../features/student/studentApiSlice"
 import { Card } from "primereact/card"
+import { Toast } from "primereact/toast"
 
 const Lates = () => {
 
-    const { data: students = [], something } = useGetAllStudentsQuery()
+    const { data: students = [], isLoading, isError, error } = useGetAllStudentsQuery()
 
     const [viewName, setViewName] = useState()
     const [selectedStudent, setSelectedStudent] = useState()
     const [filteredStudents, setFilteredStudents] = useState([])
+
+    const toast = useRef()
+
+    useEffect(()=>{
+        if (isError) 
+            toast.current.show({ severity: 'error', summary: 'שגיאה בשליפת התלמידות', details: error.data.msg || 'ארעה שגיאה. נסה שוב מאוחר יותר', life: 3000 })
+    },[isError])
 
     const itemTemplateS = (item) => {
         return (
@@ -61,6 +69,8 @@ const Lates = () => {
             </Card>
 
             {selectedStudent && <LatesOfStudent id={selectedStudent._id} name={selectedStudent.name} grade={selectedStudent.class1.grade} number={selectedStudent.class1.number} />}
+        
+            <Toast ref={toast} position="top-left" />
         </>)
 }
 

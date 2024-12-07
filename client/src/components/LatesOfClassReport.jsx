@@ -17,7 +17,12 @@ const LatesOfClassReport = (props) => {
 
     const { grade, number, email } = props
     const { startDate, endDate, id } = props.filter
-    const { data: students = [], something } = useGetLatesByClassQuery({ id, startDate, endDate })
+    const { data: students = [], isLoading, isError, error } = useGetLatesByClassQuery({ id, startDate, endDate })
+
+    useEffect(()=>{
+        if (isError) 
+            toast.current.show({ severity: 'error', summary: 'שגיאה', details: error.data.msg || 'ארעה שגיאה. נסה שוב מאוחר יותר', life: 3000 })
+    },[isError])
 
     const dateBodyTemplate = (rowData) => {
         const date = new Date(rowData.time)

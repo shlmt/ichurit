@@ -1,5 +1,5 @@
 import { DataTable } from "primereact/datatable"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import "react-jewish-datepicker/dist/index.css"
 import { Column } from "primereact/column"
 import { useGetGoodStudentsQuery } from '../features/late/lateApiSlice'
@@ -19,7 +19,12 @@ const ExcellentReport = (props) => {
     const toast = useRef(null)
 
     const { startDate, endDate, maxSum} = props.filter
-    const { data: goodStudents = [], result } = useGetGoodStudentsQuery({ startDate, endDate, maxSum })
+    const { data: goodStudents = [], isLoading, isError, error } = useGetGoodStudentsQuery({ startDate, endDate, maxSum })
+
+    useEffect(()=>{
+        if (isError) 
+            toast.current.show({ severity: 'error', summary: 'שגיאה', details: error.data.msg || 'ארעה שגיאה. נסה שוב מאוחר יותר', life: 3000 })
+    },[isError])
 
     const classBodyTemplate = (rowData) => {
         return (
@@ -124,7 +129,7 @@ const ExcellentReport = (props) => {
 
     return (
         <>
-            <Toolbar className="mb-4" right={toolbarTemplate} style={{ width: '50%', marginRight: '25%' }}></Toolbar><br />
+           <Toolbar className="mb-4" right={toolbarTemplate} style={{ width: '50%', marginRight: '25%' }}></Toolbar><br />
             <div ref={(el) => componentRef = el}>
                 <h2 style={{ color: "#6381AC" }} className="p-overlay-badge">
                     <i className="pi pi-users p-overlay-badge" style={{ fontSize: '2rem' }}>

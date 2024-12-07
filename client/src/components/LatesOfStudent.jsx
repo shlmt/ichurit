@@ -18,11 +18,16 @@ import { Calendar } from 'primereact/calendar'
 
 const LatesOfStudent = (props) => {
 
-    const { data: lates = [], something } = useGetLatesByStudentQuery(props.id)
+    const { data: lates = [], isLoading, isError, error } = useGetLatesByStudentQuery(props.id)
     const [update, resUp] = useUpdateLateMutation()
     const [del, resDel] = useDeleteLateMutation()
 
     const [checked, setChecked] = useState(false)
+
+    useEffect(()=>{
+        if (isError) 
+            toast.current.show({ severity: 'error', summary: 'שגיאה', details: error.error || 'ארעה שגיאה. נסה שוב מאוחר יותר', life: 3000 })
+    },[isError])
 
     const dateBodyTemplate = (rowData) => {
         const date = new Date(rowData.time)
