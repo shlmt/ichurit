@@ -74,8 +74,9 @@ const updateStudent= async (req,res,next)=>{
         if(comment && comment.length>70)
             return res.status(400).json({msg:'אורך הערה מוגבל ל70 תוים'})
         student.comment = comment
-        const updatedStudent = await student.save()
-        res.status(201).json({msg:`תלמידה ${name} עודכנה בהצלחה`})
+        await student.save()
+        const updatedStudent = await Student.findOne({_id:id,user:req.user._id}).populate('class1')
+        res.status(201).json({msg:`תלמידה ${name} עודכנה בהצלחה`, updatedStudent})
     }
     catch(err){
         next(err)

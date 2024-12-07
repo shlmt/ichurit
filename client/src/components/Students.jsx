@@ -10,8 +10,8 @@ import StudentDetails from "./StudentDetails"
 import { Card } from "primereact/card"
 
 const Students = () => {
-    const { data: students = [], refetch } = useGetAllStudentsQuery()
-    const { data: classes = [], result2 } = useGetAllClassesQuery()
+    const { data: students = [], isLoading, isError, error } = useGetAllStudentsQuery()
+    const { data: classes = [], isLoading:isLoadingC, isError:isErrorC, error:errorC } = useGetAllClassesQuery()
 
     const [viewName, setViewName] = useState()
     const [selectedStudent, setSelectedStudent] = useState()
@@ -171,7 +171,7 @@ const Students = () => {
 
             <br /><br />
 
-            {selectedStudent && <StudentDetails refetch={refetch} id={selectedStudent._id} name={selectedStudent.name} class1={selectedStudent.class1} idNum={selectedStudent.idNum} comment={selectedStudent.comment} />}
+            {selectedStudent && <StudentDetails student={selectedStudent} />}
         </>)
 }
 
