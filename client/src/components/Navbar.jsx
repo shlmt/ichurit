@@ -10,14 +10,14 @@ import { useLogoutMutation } from '../features/auth/authApiSlice'
 
 const Navbar = () => {
 
-    const {userFullName} = useSelector((state)=>state.auth) || '?'
+    const userFullName = useSelector((state)=>state.auth?.userFullName) || '?'
     const [logout, res] = useLogoutMutation()
 
     const items = [
         {
             label: 'עדכון נוכחות',
             icon: 'pi pi-check-circle',
-            url: '/'
+            command: ()=> navigate('/')
         },
         {
             label: 'ניהול',
@@ -26,17 +26,17 @@ const Navbar = () => {
                 {
                     label: 'נוכחות',
                     icon: 'pi pi-stopwatch',
-                    url: '/lates'
+                    command: ()=> navigate('/lates')
                 },
                 {
                     label: 'תלמידות',
                     icon: 'pi pi-users',
-                    url: '/students'
+                    command: ()=> navigate('/students')
                 },
                 {
                     label: 'כיתות',
                     icon: 'pi pi-th-large',
-                    url: '/classes'
+                    command: ()=> navigate('/classes')
                 },
                 {
                     separator: true
@@ -44,7 +44,7 @@ const Navbar = () => {
                 {
                     label: 'פתיחת שנה',
                     icon: 'pi pi-sun',
-                    url: '/stepsNewYear'
+                    command: ()=> navigate('/stepsNewYear')
                 }
             ]
         },
@@ -55,17 +55,17 @@ const Navbar = () => {
                 {
                     label: 'נוכחות כיתה',
                     icon: 'pi pi-calendar-times',
-                    url: '/classReport'
+                    command: ()=> navigate('/classReport')
                 },
                 {
                     label: 'מצטיינות',
                     icon: 'pi pi-bolt',
-                    url: '/excellentReport'
+                    command: ()=> navigate('/excellentReport')
                 },
                 {
                     label: 'תעודות',
                     icon: 'pi pi-verified',
-                    url: '/marks'
+                    command: ()=> navigate('/marks')
                 }
             ]
         }
@@ -91,7 +91,7 @@ const Navbar = () => {
                 {
                     label: 'עדכון סיסמה',
                     icon: 'pi pi-user-edit',
-                    url: '/editPassword'
+                    command: ()=> navigate('/editPassword')
                 },
                 {
                     label: 'התנתקות',
