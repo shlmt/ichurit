@@ -10,6 +10,7 @@ const authSlice = createSlice({
         setToken: (state, action) => {
             state.isUserLoggedIn = true
             state.userFullName = action.payload.username
+            localStorage.setItem("userName", state.userFullName) 
             localStorage.setItem("isLoggedIn", 'true')
         },
         removeToken: (state) => {

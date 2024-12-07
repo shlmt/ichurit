@@ -10,7 +10,7 @@ import { useLogoutMutation } from '../features/auth/authApiSlice'
 
 const Navbar = () => {
 
-    const userFullName = useSelector((state)=>state.auth?.userFullName) || '?'
+    const userFullName = useSelector((state)=>state.auth?.userFullName) || localStorage.getItem('userName') || '?'
     const [logout, res] = useLogoutMutation()
 
     const items = [
