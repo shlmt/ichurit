@@ -205,7 +205,7 @@ const LatesOfStudent = (props) => {
             <div className="card" style={{ width: '75%', marginRight: '12.5%' }}>
                 <Toolbar className="mb-4" right={toolbarTemplate} style={{ width: '50%', marginRight: '25%' }}></Toolbar><br />
                 <div ref={(el) => componentRef = el}>
-                    <h2 style={{ color: "#6381AC" }}>{`נוכחות ${props.name} ${props.grade}${props.number}`}</h2>
+                    <h2 style={{ color: "#6381AC" }}>{`נוכחות ${props.name} ${props.grade}${props.number}. סה"כ: ${lates.length||0} חריגות נוכחות`}</h2>
                     <DataTable ref={dt} value={lates} rows={5} id="_id" dataKey="_id" exportFilename={`נוכחות ${props.name} ${props.grade}${props.number}`}
                         editMode="row" onRowEditCancel={() => setCurrEditRaw(null)} onRowEditComplete={onRowEditComplete} onRowEditInit={(e) => rowEditInit(e)}
                         paginator paginatorTemplate="LastPageLink NextPageLink CurrentPageReport PrevPageLink FirstPageLink RowsPerPageDropdown" rowsPerPageOptions={[5, 10, 25, 50]} currentPageReportTemplate="({first} עד {last} מתוך {totalRecords})"
