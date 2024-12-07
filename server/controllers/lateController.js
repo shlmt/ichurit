@@ -59,7 +59,7 @@ const getLatesForMarks = async (req,res,next) => {
             return res.status(400).json({ msg:"מספר זהות הוא שדה חובה"})
         const { startDate } = req.query || new Date(2000, 1, 1) //שחר ההיסטוריה
         const { endDate } = req.query || new Date() //היום
-        const students = await Student.find({ class1: id,user:req.user._id }, { id: 1, name: 1 })
+        const students = await Student.find({ class1: id,user:req.user._id }, { id: 1, name: 1 }).sort({ name:1 })
         if(!students)
             return res.status(404).json({ msg: "לא נמצאו תלמידות העונות על הסינון המבוקש" })
         const studentsDetails = []
