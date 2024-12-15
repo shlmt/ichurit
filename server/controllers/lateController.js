@@ -9,7 +9,7 @@ const getLatesByStudent = async (req,res,next) => {
         const lates = await Late.find({ student: id,user:req.user._id }).sort({ time: -1 })
         if (!lates)
             return res.status(404).json({ msg: "לא נמצאו חריגות" })
-        res.json(lates)
+        res.status(200).json(lates)
     }
     catch(err){
         next(err)
@@ -27,7 +27,7 @@ const getLatesByClass = async (req,res,next) => {
         const lates = await Late.find({ user:req.user._id,time: { $gte: startDate, $lte: endDate }, student: { $in: ids } }).populate("student", { name: 1 }).sort({ name: 1, time: 1 })
         if (!lates)
             return res.status(404).json({ msg: "לא נמצאו חריגות" })
-        res.json(lates)
+        res.status(200).json(lates)
     }
     catch(err){
         next(err)
@@ -45,7 +45,7 @@ const getCountByClass = async (req,res,next) => {
         const lates = await Late.find({ time: { $gte: startDate, $lte: endDate }, student: { $in: ids },user:req.user._id })
         if (!lates)
             return res.status(404).json({ msg: "לא נמצאו חריגות" })
-        res.json(lates.length)
+        res.status(200).json(lates.length)
     }
     catch(err){
         next(err)
@@ -70,7 +70,7 @@ const getLatesForMarks = async (req,res,next) => {
             const miss = await Late.find({ student: s._id, time: { $gte: startDate, $lte: endDate }, type: 'חיסור',user:req.user._id })
             studentsDetails.push({ name, nLates: lates.length + legalLates.length, nLegalLates: legalLates.length, nMiss: miss.length })
         }
-        return res.json(studentsDetails)
+        return res.status(200).json(studentsDetails)
     }
     catch(err){
         next(err)
@@ -93,7 +93,7 @@ const getGoodStudents = async (req,res,next) => {
         const goodStudents = await Student.find({ _id: { $nin: ids },user:req.user._id }).populate('class1',{grade:1,number:1}).sort({ class1:1, name: 1 })
         if (!goodStudents)
             return res.status(404).json({ msg: 'אין תלמידות שעונות על התנאי המבוקש' })
-        return res.json(goodStudents)
+        return res.status(200).json(goodStudents)
     }
     catch(err){
         next(err)
@@ -158,7 +158,7 @@ const updateLate = async (req,res,next) => {
         const updated = await late.save()
         if (!updated)
             return res.status(503).json({ msg: 'ארעה שגיאה בעדכון החריגה' })
-        return res.status(201).json({ msg: `חריגה עודכנה בהצלחה` })
+        return res.status(200).json({ msg: `חריגה עודכנה בהצלחה` })
     }
     catch(err){
         next(err)
@@ -173,7 +173,7 @@ const deleteLate = async (req,res,next) => {
             return res.status(404).json({ msg: 'החריגה המבוקשת לא נמצאה' })
         const msg = `ה${late.type} נמחק בהצלחה`
         const del = await late.deleteOne()
-        res.status(200).json({ msg })
+        res.status(204).json({ msg })
     }
     catch(err){
         next(err)
@@ -183,7 +183,7 @@ const deleteLate = async (req,res,next) => {
 const deleteHistory = async (req,res,next) => {
     try {
         await Late.deleteMany({user:req.user._id})
-        res.status(200).json({ msg: 'ההיסטוריה נמחקה' })
+        res.status(204).json({ msg: 'ההיסטוריה נמחקה' })
     }
     catch(err){
         next(err)

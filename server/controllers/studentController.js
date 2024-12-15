@@ -9,7 +9,7 @@ const getAllStudents = async (req,res,next)=>{
         const studentsList = await Student.find({user:req.user._id}).populate("class1",{grade:1,number:1}).sort({grade:1,number:1,name:1})
         if(!studentsList)
             return res.status(404).json({msg:"לא נמצאו תלמידות"})
-        res.json(studentsList)
+        res.status(200).json(studentsList)
     }
     catch(err){
         next(err)
@@ -44,7 +44,7 @@ const createManyStudents= async(req,res,next)=>{
         const workbook = xlsx.read(req.file.buffer)
         const errLines = await importDataFromExcel(workbook,req)
         if(errLines.length==0) res.status(201).json({msg:"עודכן בהצלחה"})
-        else res.status(400).json({msg:"היו שגיאות בשורות הבאות: "+errLines.slice(0,-1)})
+        else res.status(404).json({msg:"היו שגיאות בשורות הבאות: "+errLines.slice(0,-1)})
     }
     catch(err){
         next(err)
@@ -76,7 +76,7 @@ const updateStudent= async (req,res,next)=>{
         student.comment = comment
         await student.save()
         const updatedStudent = await Student.findOne({_id:id,user:req.user._id}).populate('class1')
-        res.status(201).json({msg:`תלמידה ${name} עודכנה בהצלחה`, updatedStudent})
+        res.status(200).json({msg:`תלמידה ${name} עודכנה בהצלחה`, updatedStudent})
     }
     catch(err){
         next(err)
@@ -109,7 +109,7 @@ const deleteGrade8 = async (req,res,next)=>{
             msg+=`כיתה ח${c.number}: נמחקו ${del.deletedCount} ,תלמידות`
         })
         const del = await Class.deleteMany({grade:'ח',user:req.user._id})
-        res.status(200).json({msg})
+        res.status(204).json({msg})
     }
     catch(err){
         next(err)

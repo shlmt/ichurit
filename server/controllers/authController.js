@@ -75,7 +75,7 @@ const changePass = async (req,res,next) => {
         const hashPass = await bcrypt.hash(newPassword, 10)
         user.password = hashPass
         const updateUser = await user.save()
-        res.json({ msg: "סיסמה  עודכנה בהצלחה" })
+        res.status(200).json({ msg: "סיסמה  עודכנה בהצלחה" })
     }
     catch(err){
         next(err)
@@ -91,7 +91,7 @@ const deleteUser = async (req,res,next) => {
         if (!user)
             return res.status(401).json({ msg: 'המשתמש המבוקש לא נמצא' })
         const del = user.deleteOne()
-        res.json({ msg: `משתמש ${username} נמחק בהצלחה` })
+        res.status(204).json({ msg: `משתמש ${username} נמחק בהצלחה` })
     }
     catch(err){
         next(err)

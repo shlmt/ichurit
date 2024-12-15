@@ -7,7 +7,7 @@ const getAllClasses = async (req,res,next)=>{
         const classList = await Class.find({user:req.user._id}).sort({grade:1,number:1})
         if(!classList)
             return res.status(404).json({msg:"לא נמצאו כיתות"})
-        res.json(classList)
+        res.status(200).json(classList)
     }
     catch(err){
         next(err)
@@ -64,7 +64,7 @@ const updateClass = async (req,res,next)=>{
             const updateClass = await findClass.save()
             if(!updateClass)
                 return res.status(503).json({msg:'ארעה שגיאה בעדכון הכיתה'})
-            res.json({msg:`כיתה עודכנה בהצלחה`})
+            res.status(200).json({msg:`כיתה עודכנה בהצלחה`})
         }
         catch(err){
             if(err.toString().includes("email"))
@@ -86,7 +86,7 @@ const updateNewYear = async(req,res,next)=>{
             c.grade = String.fromCharCode(c.grade.charCodeAt(0) + 1)
             const newC = await c.save()
         })
-        res.json({msg:`הכיתה עודכנה בהצלחה`})
+        res.status(200).json({msg:`הכיתה עודכנה בהצלחה`})
     }
     catch(err){
         next(err)
@@ -109,7 +109,7 @@ const deleteClass = async (req,res,next)=>{
         const delstudent=await Student.deleteMany({class1:id,user:req.user._id})
         const delClass = await foundClass.deleteOne()
         const msg=`כיתה ${foundClass.grade}'${foundClass.number} נמחקה, נמחקו ${delstudent.deletedCount} תלמידות`
-        res.json({msg})
+        res.status(200).json({msg})
     }
     catch(err){
         next(err)
