@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useGetAllClassesQuery } from '../features/class/classApiSlice'
+import { useGetAllClassesQuery } from '../../features/class/classApiSlice'
 import { Card } from 'primereact/card'
 import { Toast } from 'primereact/toast'
 import Class from './Class'

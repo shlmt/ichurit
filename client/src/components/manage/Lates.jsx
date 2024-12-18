@@ -1,7 +1,7 @@
 import { AutoComplete } from "primereact/autocomplete"
 import LatesOfStudent from "./LatesOfStudent"
 import { useEffect, useRef, useState } from "react"
-import { useGetAllStudentsQuery } from "../features/student/studentApiSlice"
+import { useGetAllStudentsQuery } from "../../features/student/studentApiSlice"
 import { Card } from "primereact/card"
 import { Toast } from "primereact/toast"
 

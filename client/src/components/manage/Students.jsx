@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react"
-import { useGetAllStudentsQuery, useCreateStudentMutation } from "../features/student/studentApiSlice"
+import { useGetAllStudentsQuery, useCreateStudentMutation } from "../../features/student/studentApiSlice"
 import { AutoComplete } from "primereact/autocomplete"
 import { InputText } from "primereact/inputtext"
 import { Button } from "primereact/button"
 import { Toast } from "primereact/toast"
 import { Dialog } from "primereact/dialog"
-import { useGetAllClassesQuery } from "../features/class/classApiSlice"
+import { useGetAllClassesQuery } from "../../features/class/classApiSlice"
 import StudentDetails from "./StudentDetails"
 import { Card } from "primereact/card"
 

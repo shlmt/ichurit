@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
 import { useRef } from "react"
-import { useDeleteStudentMutation, useUpdateStudentMutation } from "../features/student/studentApiSlice"
+import { useDeleteStudentMutation, useUpdateStudentMutation } from "../../features/student/studentApiSlice"
 import { Card } from "primereact/card"
 import { Button } from "primereact/button"
 import { Dialog } from "primereact/dialog"
 import { InputText } from "primereact/inputtext"
 import { Toast } from "primereact/toast"
 import { AutoComplete } from "primereact/autocomplete"
-import { useGetAllClassesQuery } from "../features/class/classApiSlice"
+import { useGetAllClassesQuery } from "../../features/class/classApiSlice"
 import { Checkbox } from "primereact/checkbox"
 
 const StudentDetails = (props) => {

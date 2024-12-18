@@ -1,6 +1,6 @@
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
-import { useDeleteLateMutation, useGetLatesByStudentQuery, useUpdateLateMutation } from '../features/late/lateApiSlice'
+import { useDeleteLateMutation, useGetLatesByStudentQuery, useUpdateLateMutation } from '../../features/late/lateApiSlice'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import { Tag } from 'primereact/tag'

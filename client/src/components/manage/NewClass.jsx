@@ -1,4 +1,4 @@
-import { useAddClassMutation } from '../features/class/classApiSlice'
+import { useAddClassMutation } from '../../features/class/classApiSlice'
 import { Button } from "primereact/button"
 import { Dialog } from "primereact/dialog"
 import { InputText } from "primereact/inputtext"

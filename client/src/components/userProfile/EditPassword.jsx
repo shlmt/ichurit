@@ -1,5 +1,5 @@
 import { Password } from "primereact/password"
-import { useChangePassMutation } from "../features/auth/authApiSlice"
+import { useChangePassMutation } from "../../features/auth/authApiSlice"
 import { useRef, useState } from "react"
 import { Button } from "primereact/button"
 import { Toast } from "primereact/toast"

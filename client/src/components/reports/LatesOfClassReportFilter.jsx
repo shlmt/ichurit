@@ -4,7 +4,7 @@ import { Card } from "primereact/card"
 import { AutoComplete } from "primereact/autocomplete"
 import { ReactJewishDatePicker, BasicJewishDay } from "react-jewish-datepicker"
 import "react-jewish-datepicker/dist/index.css"
-import { useGetAllClassesQuery } from "../features/class/classApiSlice"
+import { useGetAllClassesQuery } from "../../features/class/classApiSlice"
 import LatesOfClassReport from "./LatesOfClassReport"
 import { Toast } from "primereact/toast"
 

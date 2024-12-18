@@ -4,12 +4,12 @@ import { DataTable } from "primereact/datatable"
 import { Tag } from "primereact/tag"
 import { toJewishDate, formatJewishDateInHebrew } from "jewish-date"
 import { useEffect, useRef } from "react"
-import { useGetLatesByClassQuery } from "../features/late/lateApiSlice"
+import { useGetLatesByClassQuery } from "../../features/late/lateApiSlice"
 import { Toolbar } from "primereact/toolbar"
 import { Toast } from "primereact/toast"
 import ReactToPrint from "react-to-print"
 import { renderToString } from "react-dom/server"
-import { useSendEmailMutation } from "../features/email/mailApiSlice"
+import { useSendEmailMutation } from "../../features/email/mailApiSlice"
 
 const LatesOfClassReport = (props) => {
 

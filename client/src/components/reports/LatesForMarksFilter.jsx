@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { useGetAllClassesQuery } from "../features/class/classApiSlice"
+import { useGetAllClassesQuery } from "../../features/class/classApiSlice"
 import LatesForMarks from "./LatesForMarks"
 import { Card } from "primereact/card"
 import { AutoComplete } from "primereact/autocomplete"
