@@ -1,7 +1,7 @@
 const Student = require('../models/Student')
 const Class = require('../models/Class')
 const Late=require('../models/Late')
-const { importDataFromExcel } = require('../servises/dataImportService')
+const { importDataFromExcel } = require('../services/dataImportService')
 const xlsx = require('xlsx')
 
 const getAllStudents = async (req,res,next)=>{
