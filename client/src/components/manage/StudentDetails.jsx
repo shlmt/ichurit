@@ -1,26 +1,27 @@
 import { useEffect, useState } from "react"
 import { useRef } from "react"
-import { useDeleteStudentMutation, useUpdateStudentMutation } from "../features/student/studentApiSlice"
+import { useDeleteStudentMutation, useUpdateStudentMutation } from "../../features/student/studentApiSlice"
 import { Card } from "primereact/card"
 import { Button } from "primereact/button"
 import { Dialog } from "primereact/dialog"
 import { InputText } from "primereact/inputtext"
 import { Toast } from "primereact/toast"
 import { AutoComplete } from "primereact/autocomplete"
-import { useGetAllClassesQuery } from "../features/class/classApiSlice"
+import { useGetAllClassesQuery } from "../../features/class/classApiSlice"
 import { Checkbox } from "primereact/checkbox"
 
 const StudentDetails = (props) => {
-    const { data: classes = [], something2 } = useGetAllClassesQuery()
+    const { data: classes = [], isLoading, isError, error } = useGetAllClassesQuery()
 
     const [del, resDel] = useDeleteStudentMutation()
     const [update, resUp] = useUpdateStudentMutation()
 
-    const id = props.id
-    const idNum = useRef(props.idNum)
-    const name = useRef(props.name)
-    const comment = useRef(props.comment)
-    const [selectedClass, setSelectedClass] = useState(props.class1)
+    const [student, setStudent] = useState(props.student)
+    const id = student._id
+    const idNum = useRef(student.idNum)
+    const name = useRef(student.name)
+    const comment = useRef(student.comment)
+    const [selectedClass, setSelectedClass] = useState(student.class1)
 
     const [visible, setVisible] = useState(false)
     const [checked, setChecked] = useState(false)
@@ -45,7 +46,7 @@ const StudentDetails = (props) => {
         if (resUp.isSuccess) {
             let details = `${name.current.value} ${idNum.current.value} עודכנה בהצלחה`
             toast.current.show({ severity: 'success', summary: `פרטי תלמידה עודכנו בהצלחה`, detail: details, life: 3000 })
-            // props.refetch()
+            setStudent(resUp.data.updatedStudent)
         }
         if (resUp.isError) {
             let det = resUp?.error?.data?.msg || 'ארעה שגיאה. נסה שוב מאוחר יותר'
@@ -70,7 +71,7 @@ const StudentDetails = (props) => {
 
     const [v, setV] = useState(false)
 
-    const [viewClass, setViewClass] = useState(props.class1.grade + props.class1.number)
+    const [viewClass, setViewClass] = useState(student.class1.grade + student.class1.number)
     const [filteredClasses, setFilteredClasses] = useState([])
 
     useEffect(() => {
@@ -101,10 +102,10 @@ const StudentDetails = (props) => {
 
     return (<>
         <Card className="md:w-25rem" style={{ width: '50%', marginRight: '25%' }}>
-            <h2>{props.name}</h2>
-            <p className="m-0">{" כיתה: " + props.class1?.grade + props.class1?.number}</p>
-            <p className="m-0">{"מספר זהות: " + props.idNum}</p>
-            {props.comment && <p className="m-0">{"הערה: " + props.comment}</p>}
+            <h2>{student.name}</h2>
+            <p className="m-0">{" כיתה: " + student.class1?.grade + student.class1?.number}</p>
+            <p className="m-0">{"מספר זהות: " + student.idNum}</p>
+            {student.comment && <p className="m-0">{"הערה: " + student.comment}</p>}
             <Button icon="pi pi-pencil" rounded outlined style={{ marginLeft: '0.5em' }} tooltip="עריכה" onClick={() => setVisible(true)} />
             <Button severity="secondary" icon="pi pi-trash" rounded outlined tooltip="מחיקה" tooltipOptions={{ position: 'left' }} onClick={() => setV(true)} />
         </Card>
@@ -115,8 +116,8 @@ const StudentDetails = (props) => {
                 <Button label="&nbsp;ביטול" icon="pi pi-times" onClick={() => { setVisible(false) }} className="p-button-text" />
             </div>
             }>
-            <InputText placeholder='חיפוש תלמידה' ref={name} defaultValue={props.name} /> <br /><br />
-            <InputText placeholder='מספר זהות' ref={idNum} maxLength={9} minLength={9} keyfilter="pint" defaultValue={props.idNum} /> <br /><br />
+            <InputText placeholder='חיפוש תלמידה' ref={name} defaultValue={student.name} /> <br /><br />
+            <InputText placeholder='מספר זהות' ref={idNum} maxLength={9} minLength={9} keyfilter="pint" defaultValue={student.idNum} /> <br /><br />
             <AutoComplete
                 value={viewClass}
                 style={{ textAlign: 'center' }}
@@ -136,7 +137,7 @@ const StudentDetails = (props) => {
                 forceSelection
                 onBlur={() => { if (selectedClass) setViewClass(selectedClass.grade + selectedClass.number) }}
             /> <br /><br />
-            <InputText placeholder='הערה' ref={comment} maxLength={70} defaultValue={props.comment} />
+            <InputText placeholder='הערה' ref={comment} maxLength={70} defaultValue={student.comment} />
         </Dialog>
 
         <Dialog visible={v} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} modal onHide={() => { setV(false); setChecked(false) }}

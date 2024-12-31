@@ -1,6 +1,6 @@
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
-import { useDeleteLateMutation, useGetLatesByStudentQuery, useUpdateLateMutation } from '../features/late/lateApiSlice'
+import { useDeleteLateMutation, useGetLatesByStudentQuery, useUpdateLateMutation } from '../../features/late/lateApiSlice'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import { Tag } from 'primereact/tag'
@@ -18,11 +18,16 @@ import { Calendar } from 'primereact/calendar'
 
 const LatesOfStudent = (props) => {
 
-    const { data: lates = [], something } = useGetLatesByStudentQuery(props.id)
+    const { data: lates = [], isLoading, isError, error } = useGetLatesByStudentQuery(props.id)
     const [update, resUp] = useUpdateLateMutation()
     const [del, resDel] = useDeleteLateMutation()
 
     const [checked, setChecked] = useState(false)
+
+    useEffect(()=>{
+        if (isError) 
+            toast.current.show({ severity: 'error', summary: 'שגיאה', details: error.error || 'ארעה שגיאה. נסה שוב מאוחר יותר', life: 3000 })
+    },[isError])
 
     const dateBodyTemplate = (rowData) => {
         const date = new Date(rowData.time)
@@ -205,7 +210,8 @@ const LatesOfStudent = (props) => {
             <div className="card" style={{ width: '75%', marginRight: '12.5%' }}>
                 <Toolbar className="mb-4" right={toolbarTemplate} style={{ width: '50%', marginRight: '25%' }}></Toolbar><br />
                 <div ref={(el) => componentRef = el}>
-                    <h2 style={{ color: "#6381AC" }}>{`נוכחות ${props.name} ${props.grade}${props.number}`}</h2>
+                    <h2 style={{ color: "#6381AC", marginBottom: 0 }}>{`נוכחות ${props.name} ${props.grade}${props.number}`}</h2>
+                    <h3 style={{ color: "#4c566a", marginTop: 10 }}>{`סה"כ: ${lates.length||0} חריגות נוכחות`}</h3>
                     <DataTable ref={dt} value={lates} rows={5} id="_id" dataKey="_id" exportFilename={`נוכחות ${props.name} ${props.grade}${props.number}`}
                         editMode="row" onRowEditCancel={() => setCurrEditRaw(null)} onRowEditComplete={onRowEditComplete} onRowEditInit={(e) => rowEditInit(e)}
                         paginator paginatorTemplate="LastPageLink NextPageLink CurrentPageReport PrevPageLink FirstPageLink RowsPerPageDropdown" rowsPerPageOptions={[5, 10, 25, 50]} currentPageReportTemplate="({first} עד {last} מתוך {totalRecords})"

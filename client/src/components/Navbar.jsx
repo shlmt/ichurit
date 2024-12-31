@@ -3,19 +3,21 @@ import { Menubar } from 'primereact/menubar'
 import { Avatar } from 'primereact/avatar'
 import { Menu } from 'primereact/menu'
 import { removeToken } from '../features/auth/authSlice'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import apiSlice from '../app/apiSlice'
+import { useLogoutMutation } from '../features/auth/authApiSlice'
 
 const Navbar = () => {
 
-    const userFullName = localStorage.getItem('username') || '?'
+    const userFullName = useSelector((state)=>state.auth?.userFullName) || localStorage.getItem('userName') || '?'
+    const [logout, res] = useLogoutMutation()
 
     const items = [
         {
             label: 'עדכון נוכחות',
             icon: 'pi pi-check-circle',
-            url: '/'
+            command: ()=> navigate('/')
         },
         {
             label: 'ניהול',
@@ -24,17 +26,17 @@ const Navbar = () => {
                 {
                     label: 'נוכחות',
                     icon: 'pi pi-stopwatch',
-                    url: '/lates'
+                    command: ()=> navigate('/lates')
                 },
                 {
                     label: 'תלמידות',
                     icon: 'pi pi-users',
-                    url: '/students'
+                    command: ()=> navigate('/students')
                 },
                 {
                     label: 'כיתות',
                     icon: 'pi pi-th-large',
-                    url: '/classes'
+                    command: ()=> navigate('/classes')
                 },
                 {
                     separator: true
@@ -42,7 +44,7 @@ const Navbar = () => {
                 {
                     label: 'פתיחת שנה',
                     icon: 'pi pi-sun',
-                    url: '/stepsNewYear'
+                    command: ()=> navigate('/stepsNewYear')
                 }
             ]
         },
@@ -53,17 +55,17 @@ const Navbar = () => {
                 {
                     label: 'נוכחות כיתה',
                     icon: 'pi pi-calendar-times',
-                    url: '/classReport'
+                    command: ()=> navigate('/classReport')
                 },
                 {
                     label: 'מצטיינות',
                     icon: 'pi pi-bolt',
-                    url: '/excellentReport'
+                    command: ()=> navigate('/excellentReport')
                 },
                 {
                     label: 'תעודות',
                     icon: 'pi pi-verified',
-                    url: '/marks'
+                    command: ()=> navigate('/marks')
                 }
             ]
         }
@@ -79,6 +81,7 @@ const Navbar = () => {
     const handleLogoutClick = () => {
         dispatch(removeToken())
         dispatch(apiSlice.util.resetApiState())
+        logout()
         navigate("/")
     }
 
@@ -88,7 +91,7 @@ const Navbar = () => {
                 {
                     label: 'עדכון סיסמה',
                     icon: 'pi pi-user-edit',
-                    url: '/editPassword'
+                    command: ()=> navigate('/editPassword')
                 },
                 {
                     label: 'התנתקות',
