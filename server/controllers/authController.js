@@ -18,7 +18,7 @@ const login = async (req,res,next) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'PROD',
-            sameSite: 'None',
+            sameSite: process.env.NODE_ENV === 'PROD' ? 'None' : '',
             maxAge: 24 * 60 * 60 * 1000 * 7 // one week = 7 days
         })
         res.status(200).json({ message: 'התחבר בהצלחה' });
