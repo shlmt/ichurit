@@ -14,16 +14,19 @@ import NotFound from './components/NotFound'
 import StepperNewYear from './components/StepperNewYear'
 import EditPassword from './components/EditPassword'
 import Footer from './components/Footer'
+import JoyrideTour from './components/JoyrideTour'
+import { useState } from 'react'
 
 function App() {
 
+   const [runTour, setRunTour] = useState(0)
    const {isUserLoggedIn} = useSelector((state)=>state.auth)
 
    return (<>
          {
             isUserLoggedIn ? 
             <>
-               <Navbar/>
+               <Navbar setRunTour={setRunTour}/>
                <Routes>
                   <Route path='/' element={<CreateLate/>}/>
                   <Route path='/classes' element={<Classes/>}/>
@@ -36,6 +39,7 @@ function App() {
                   <Route path='/editPassword' element={<EditPassword/>}/>
                   <Route path='*' element={<NotFound allowed={true}/>}/>
                </Routes>
+               <JoyrideTour start={runTour}/>
             </>
             :  
             <Routes>
