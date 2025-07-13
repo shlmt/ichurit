@@ -100,7 +100,7 @@ const joyrideStyles = {
 const TOUR_KEY = 'ichurit_tour_completed'
 
 const JoyrideTour = ({ start }) => {
-	const [run, setRun] = useState(false)
+	const [run, setRun] = useState(start)
 	const [stepIndex, setStepIndex] = useState(0)
 	const navigate = useNavigate()
 	const location = useLocation()
@@ -108,11 +108,7 @@ const JoyrideTour = ({ start }) => {
 
 	useEffect(() => {
 		const completed = localStorage.getItem(TOUR_KEY)
-		if (!completed) setRun(true)
-	}, [])
-
-	useEffect(() => {
-		setRun(start)
+		if (!completed || start>0) setRun(true)
 	}, [start])
 
 	const handleJoyrideCallback = (data) => {
