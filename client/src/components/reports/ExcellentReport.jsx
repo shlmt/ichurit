@@ -1,8 +1,8 @@
 import { DataTable } from "primereact/datatable"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import "react-jewish-datepicker/dist/index.css"
 import { Column } from "primereact/column"
-import { useGetGoodStudentsQuery } from '../features/late/lateApiSlice'
+import { useGetGoodStudentsQuery } from '../../features/late/lateApiSlice'
 import { Button } from "primereact/button"
 import { Toolbar } from "primereact/toolbar"
 import ReactToPrint from "react-to-print"
@@ -11,7 +11,7 @@ import { toJewishDate, formatJewishDateInHebrew } from "jewish-date"
 import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup"
 import { InputText } from "primereact/inputtext"
 import { renderToString } from "react-dom/server"
-import { useSendEmailMutation } from "../features/email/mailApiSlice"
+import { useSendEmailMutation } from "../../features/email/mailApiSlice"
 import { Badge } from "primereact/badge"
 
 const ExcellentReport = (props) => {
@@ -19,7 +19,12 @@ const ExcellentReport = (props) => {
     const toast = useRef(null)
 
     const { startDate, endDate, maxSum} = props.filter
-    const { data: goodStudents = [], result } = useGetGoodStudentsQuery({ startDate, endDate, maxSum })
+    const { data: goodStudents = [], isLoading, isError, error } = useGetGoodStudentsQuery({ startDate, endDate, maxSum })
+
+    useEffect(()=>{
+        if (isError) 
+            toast.current.show({ severity: 'error', summary: 'שגיאה', details: error.data.msg || 'ארעה שגיאה. נסה שוב מאוחר יותר', life: 3000 })
+    },[isError])
 
     const classBodyTemplate = (rowData) => {
         return (
@@ -124,7 +129,7 @@ const ExcellentReport = (props) => {
 
     return (
         <>
-            <Toolbar className="mb-4" right={toolbarTemplate} style={{ width: '50%', marginRight: '25%' }}></Toolbar><br />
+           <Toolbar className="mb-4" right={toolbarTemplate} style={{ width: '50%', marginRight: '25%' }}></Toolbar><br />
             <div ref={(el) => componentRef = el}>
                 <h2 style={{ color: "#6381AC" }} className="p-overlay-badge">
                     <i className="pi pi-users p-overlay-badge" style={{ fontSize: '2rem' }}>

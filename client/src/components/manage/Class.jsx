@@ -1,4 +1,4 @@
-import { useDeleteClassMutation, useUpdateClassMutation } from '../features/class/classApiSlice'
+import { useDeleteClassMutation, useUpdateClassMutation } from '../../features/class/classApiSlice'
 import { Button } from 'primereact/button'
 import { Card } from 'primereact/card'
 import { Checkbox } from 'primereact/checkbox'

@@ -1,4 +1,4 @@
-import { useCreateUserMutation } from "../features/auth/authApiSlice"
+import { useCreateUserMutation } from "../../features/auth/authApiSlice"
 
 const NewUser=()=>{
     const [createUser,res] = useCreateUserMutation()

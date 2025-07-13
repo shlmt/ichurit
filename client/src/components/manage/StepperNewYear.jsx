@@ -5,11 +5,11 @@ import { StepperPanel } from "primereact/stepperpanel"
 import { Toast } from "primereact/toast"
 import { Card } from "primereact/card"
 import { Checkbox } from "primereact/checkbox"
-import { useDeleteHistoryMutation } from "../features/late/lateApiSlice"
-import { useCreateManyStudentsMutation, useDeleteGrade8Mutation } from "../features/student/studentApiSlice"
-import { useGetAllClassesQuery, useUpdateNewYearMutation } from "../features/class/classApiSlice"
+import { useDeleteHistoryMutation } from "../../features/late/lateApiSlice"
+import { useCreateManyStudentsMutation, useDeleteGrade8Mutation } from "../../features/student/studentApiSlice"
+import { useGetAllClassesQuery, useUpdateNewYearMutation } from "../../features/class/classApiSlice"
 import { Accordion, AccordionTab } from 'primereact/accordion'
-import ExportExcel from "./ExportExcel"
+import ExportExcel from "../reports/ExportExcel"
 import { FileUpload } from "primereact/fileupload"
 import { Carousel } from 'primereact/carousel'
 import Class from "./Class"
@@ -108,7 +108,7 @@ const StepperNewYear = () => {
     }, [resUploadStudents])
 
 
-    const { data: classes = [], res } = useGetAllClassesQuery()
+    const { data: classes = [], isLoading, isError, error } = useGetAllClassesQuery()
 
     const cardTemplate = (c) => {
         return (
@@ -241,8 +241,16 @@ const StepperNewYear = () => {
                                         <h3>עדכון מחנכות</h3>
                                         <p className="m-0">זה המקום לכתוב עבור כל כיתה את הפרטים של המחנכת החדשה</p>
                                         <div className="card flex justify-content-center">
-                                            <Carousel value={classes} numVisible={1} numScroll={1} orientation="vertical"
+                                            {!isError ? <Carousel value={classes} numVisible={1} numScroll={1} orientation="vertical"
                                                 showIndicators={false} verticalViewPortHeight="220px" itemTemplate={cardTemplate} style={{ width: '100%' }} />
+                                                : <div style={{
+                                                    background: '#f8d7da', color: '#721c24', border: '1px solid #f5c6cb',
+                                                    borderRadius: 4, padding: '10px 15px', display: 'flex', alignItems: 'center', fontSize: 14, fontWeight: 'bold'
+                                                }}>                                                
+                                                    <i className="pi pi-times-circle" style={{ marginRight: '10px', fontSize: '16px', color: '#721c24' }}></i>
+                                                    ארעה שגיאה בשליפת הכיתות
+                                                </div>
+                                                }
                                         </div>
                                     </div>
                                 </Card>

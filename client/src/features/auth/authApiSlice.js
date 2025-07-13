@@ -9,6 +9,12 @@ const authApiSlice = apiSlice.injectEndpoints({
                 body:user
             })
         }),
+        logout: build.mutation({
+            query: () => ({
+                url: '/api/auth',
+                method: 'DELETE'
+            })
+        }),
         createUser: build.mutation({
             query:(user)=>({
                 url:'/api/auth/createUser',
@@ -32,5 +38,5 @@ const authApiSlice = apiSlice.injectEndpoints({
     })
 })
 
-export const {useLoginMutation,useCreateUserMutation,useChangePassMutation,useDeleteUserMutation } = authApiSlice
+export const {useLoginMutation,useLogoutMutation,useCreateUserMutation,useChangePassMutation,useDeleteUserMutation } = authApiSlice
 

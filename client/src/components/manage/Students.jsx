@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState } from "react"
-import { useGetAllStudentsQuery, useCreateStudentMutation } from "../features/student/studentApiSlice"
+import { useGetAllStudentsQuery, useCreateStudentMutation } from "../../features/student/studentApiSlice"
 import { AutoComplete } from "primereact/autocomplete"
 import { InputText } from "primereact/inputtext"
 import { Button } from "primereact/button"
 import { Toast } from "primereact/toast"
 import { Dialog } from "primereact/dialog"
-import { useGetAllClassesQuery } from "../features/class/classApiSlice"
+import { useGetAllClassesQuery } from "../../features/class/classApiSlice"
 import StudentDetails from "./StudentDetails"
 import { Card } from "primereact/card"
 
 const Students = () => {
-    const { data: students = [], refetch } = useGetAllStudentsQuery()
-    const { data: classes = [], result2 } = useGetAllClassesQuery()
+    const { data: students = [], isLoading, isError, error } = useGetAllStudentsQuery()
+    const { data: classes = [], isLoading:isLoadingC, isError:isErrorC, error:errorC } = useGetAllClassesQuery()
 
     const [viewName, setViewName] = useState()
     const [selectedStudent, setSelectedStudent] = useState()
@@ -171,7 +171,7 @@ const Students = () => {
 
             <br /><br />
 
-            {selectedStudent && <StudentDetails refetch={refetch} id={selectedStudent._id} name={selectedStudent.name} class1={selectedStudent.class1} idNum={selectedStudent.idNum} comment={selectedStudent.comment} />}
+            {selectedStudent && <StudentDetails student={selectedStudent} />}
         </>)
 }
 

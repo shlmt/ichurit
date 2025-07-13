@@ -3,10 +3,9 @@ import { useGetAllStudentsQuery } from '../features/student/studentApiSlice'
 import { useAddLateMutation } from '../features/late/lateApiSlice'
 import { AutoComplete } from "primereact/autocomplete"
 import { SelectButton } from 'primereact/selectbutton'
-import { ReactJewishDatePicker, BasicJewishDay } from "react-jewish-datepicker"
+import { ReactJewishDatePicker } from "react-jewish-datepicker"
 import "react-jewish-datepicker/dist/index.css"
 import { toJewishDate, formatJewishDateInHebrew } from "jewish-date"
-import 'rc-time-picker/assets/index.css'
 import { Card } from 'primereact/card'
 import { Button } from 'primereact/button'
 import { InputTextarea } from "primereact/inputtextarea"

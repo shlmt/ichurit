@@ -1,4 +1,4 @@
-import { useGetLatesForMarksQuery } from "../features/late/lateApiSlice"
+import { useGetLatesForMarksQuery } from "../../features/late/lateApiSlice"
 import { DataTable } from "primereact/datatable"
 import { useEffect, useRef } from "react"
 import "react-jewish-datepicker/dist/index.css"
@@ -7,7 +7,7 @@ import { Button } from "primereact/button"
 import { Toolbar } from "primereact/toolbar"
 import { Toast } from "primereact/toast"
 import ReactToPrint from "react-to-print"
-import { useSendEmailMutation } from "../features/email/mailApiSlice"
+import { useSendEmailMutation } from "../../features/email/mailApiSlice"
 import { renderToString } from "react-dom/server"
 import { toJewishDate, formatJewishDateInHebrew } from "jewish-date"
 
@@ -16,16 +16,21 @@ const LatesForMarks = (props) => {
 
     const { grade, number, email } = props
     const { startDate, endDate, id } = props.filter
-    const { data: students = [], result } = useGetLatesForMarksQuery({ startDate, endDate, id })
+    const { data: students = [], isLoading, isError, error } = useGetLatesForMarksQuery({ startDate, endDate, id })
     const [send, resSend] = useSendEmailMutation()
 
     const dt = useRef()
+    let componentRef = useRef()
+
+    useEffect(()=>{
+        if (isError) 
+            toast.current.show({ severity: 'error', summary: 'שגיאה', details: error.data.msg || 'ארעה שגיאה. נסה שוב מאוחר יותר', life: 3000 })
+    },[isError])
 
     const exportCSV = () => {
         dt.current.exportCSV()
     }
 
-    let componentRef = useRef()
 
     const sendMail = () => {
         const html = renderToString(
@@ -83,7 +88,6 @@ const LatesForMarks = (props) => {
                 </DataTable>
             </div>
             <Toast ref={toast} position="top-left" />
-
         </>
     )
 }

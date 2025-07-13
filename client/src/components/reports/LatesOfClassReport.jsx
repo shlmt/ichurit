@@ -4,12 +4,12 @@ import { DataTable } from "primereact/datatable"
 import { Tag } from "primereact/tag"
 import { toJewishDate, formatJewishDateInHebrew } from "jewish-date"
 import { useEffect, useRef } from "react"
-import { useGetLatesByClassQuery } from "../features/late/lateApiSlice"
+import { useGetLatesByClassQuery } from "../../features/late/lateApiSlice"
 import { Toolbar } from "primereact/toolbar"
 import { Toast } from "primereact/toast"
 import ReactToPrint from "react-to-print"
 import { renderToString } from "react-dom/server"
-import { useSendEmailMutation } from "../features/email/mailApiSlice"
+import { useSendEmailMutation } from "../../features/email/mailApiSlice"
 
 const LatesOfClassReport = (props) => {
 
@@ -17,7 +17,12 @@ const LatesOfClassReport = (props) => {
 
     const { grade, number, email } = props
     const { startDate, endDate, id } = props.filter
-    const { data: students = [], something } = useGetLatesByClassQuery({ id, startDate, endDate })
+    const { data: students = [], isLoading, isError, error } = useGetLatesByClassQuery({ id, startDate, endDate })
+
+    useEffect(()=>{
+        if (isError) 
+            toast.current.show({ severity: 'error', summary: 'שגיאה', details: error.data.msg || 'ארעה שגיאה. נסה שוב מאוחר יותר', life: 3000 })
+    },[isError])
 
     const dateBodyTemplate = (rowData) => {
         const date = new Date(rowData.time)

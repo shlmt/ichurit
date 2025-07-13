@@ -2,7 +2,7 @@ const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-const login = async (req, res) => {
+const login = async (req,res,next) => {
     try {
         const { username, password } = req.body
         if (!username || !password)
@@ -10,19 +10,40 @@ const login = async (req, res) => {
         const user = await User.findOne({ username }).lean()
         if (!user)
             return res.status(401).json({ msg: 'משתמש לא מורשה' })
-        const isMatch = await bcrypt.compare(password, user.password)
+        const isMatch = await bcrypt.compare(password+'', user.password)
         if (!isMatch)
             return res.status(401).json({ msg: 'משתמש לא מורשה' })
         const userInfo = { _id: user._id, username: user.username }
         const token = jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET)
-        res.json({ token })
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'PROD',
+            sameSite: 'None',
+            maxAge: 24 * 60 * 60 * 1000 * 7 // one week = 7 days
+        })
+        res.status(200).json({ message: 'התחבר בהצלחה' });
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 
-const createUser = async (req, res) => {
+const logout = async (req,res,next) => {
+    try{
+        res.cookie('token', '', { 
+            httpOnly: true, 
+            secure: process.env.NODE_ENV === 'PROD',
+            sameSite: 'strict', 
+            expires: new Date(0) 
+        })
+        res.status(200).json({ message: 'התנתק בהצלחה' })
+    }
+    catch(err){
+        next(err)
+    }
+}
+
+const createUser = async (req,res,next) => {
     try {
         const { username, password } = req.body
         if (!username || !password)
@@ -37,12 +58,12 @@ const createUser = async (req, res) => {
             return res.status(503).json({ msg: 'ארעה שגיאה בהוספת המשתמש' })
         res.status(201).json({ msg: `משתמש חדש ${username} נוסף בהצלחה` })
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 
-const changePass = async (req, res) => {
+const changePass = async (req,res,next) => {
     try {
         const {newPassword } = req.body
         const { username } = req.user
@@ -54,14 +75,14 @@ const changePass = async (req, res) => {
         const hashPass = await bcrypt.hash(newPassword, 10)
         user.password = hashPass
         const updateUser = await user.save()
-        res.json({ msg: "סיסמה  עודכנה בהצלחה" })
+        res.status(200).json({ msg: "סיסמה  עודכנה בהצלחה" })
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 
-const deleteUser = async (req, res) => {
+const deleteUser = async (req,res,next) => {
     try {
         const { id } = req.params
         if (!id)
@@ -70,11 +91,11 @@ const deleteUser = async (req, res) => {
         if (!user)
             return res.status(401).json({ msg: 'המשתמש המבוקש לא נמצא' })
         const del = user.deleteOne()
-        res.json({ msg: `משתמש ${username} נמחק בהצלחה` })
+        res.status(204).json({ msg: `משתמש ${username} נמחק בהצלחה` })
     }
-    catch (err) {
-        return res.status(500).json({msg:'ארעה שגיאה לא צפויה, נסו שוב מאוחר יותר'})
+    catch(err){
+        next(err)
     }
 }
 
-module.exports = { login, createUser, changePass, deleteUser }
+module.exports = { login, logout, createUser, changePass, deleteUser }

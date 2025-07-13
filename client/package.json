@@ -10,7 +10,6 @@
     "file-saver": "^2.0.5",
     "primeicons": "^6.0.1",
     "primereact": "^10.6.2",
-    "rc-time-picker": "^3.7.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-jewish-datepicker": "^2.0.12",
