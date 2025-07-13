@@ -34,6 +34,7 @@
   - הוספת תלמידות חדשות באמצעות קובץ Excel.
   - העלאה אוטומטית של כיתה.
   - מחיקה מהירה של מחזור כיתות ח'.
+  - **סיור הדרכה אינטראקטיבי**: שימוש ב`react-joyride` ליצירת סיור הדרכה והיכרות עם המערכת.
 ## License
 This project is proprietary software. All rights are reserved.  
 It is permitted to use this software **for learning purposes only** without payment.  
