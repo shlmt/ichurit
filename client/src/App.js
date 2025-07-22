@@ -15,12 +15,16 @@ import StepperNewYear from './components/manage/StepperNewYear'
 import EditPassword from './components/userProfile/EditPassword'
 import Footer from './components/Footer'
 import JoyrideTour from './components/JoyrideTour'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function App() {
 
    const [runTour, setRunTour] = useState(0)
    const {isUserLoggedIn} = useSelector((state)=>state.auth)
+
+   useEffect(()=>{
+      if(!isUserLoggedIn) setRunTour(0)
+   }, [isUserLoggedIn])
 
    return (<>
          {
