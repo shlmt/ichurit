@@ -7,6 +7,7 @@ import { Password } from 'primereact/password'
 import { Button } from 'primereact/button'
 import { Card } from 'primereact/card'
 import { Toast } from 'primereact/toast';
+import { useLocation } from 'react-router-dom'
 
 const Login = () => {
 
@@ -14,8 +15,25 @@ const Login = () => {
     const [loginFunc, { isError, error, isSuccess, data }] = useLoginMutation()
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    
+    const location = useLocation()
 
     const toastTopCenter = useRef(null)
+
+    useEffect(() => {
+        // Parse default parameters from URL
+        const urlParams = new URLSearchParams(location.search)
+        const urlUsername = urlParams.get('username')
+        const urlPassword = urlParams.get('password')
+
+        // Set values from URL if they exist
+        if (urlUsername) {
+            setUsername(urlUsername)
+        }
+        if (urlPassword) {
+            setPassword(urlPassword)
+        }
+    }, [location])
 
     useEffect(() => {
         if (isSuccess)
@@ -40,6 +58,7 @@ const Login = () => {
             <span className="p-input-icon-right">
                 <i className="pi pi-user" />
                 <InputText
+                    value={username}
                     type='text'
                     placeholder="שם משתמש"
                     style={{ width: '100%' }} 
@@ -51,6 +70,7 @@ const Login = () => {
             <br />
             <Password
                 pt={{ input: { style: { width: '100%' } } }}
+                value={password}
                 placeholder="סיסמה"
                 feedback={false}
                 toggleMask
