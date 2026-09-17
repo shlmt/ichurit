@@ -36,8 +36,7 @@ mongoose.connection.once('open',()=>{
 })
 
 mongoose.connection.on("error", err=>{
-    console.log(`ERROR in connect to DB: ${err}`)
-    return res.status(500).json({msg:'ארעה שגיאה בחיסור למסד הנתונים'});
+    console.error(`ERROR in connect to DB: ${err}`)
 })
 
  

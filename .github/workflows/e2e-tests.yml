@@ -13,6 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -30,11 +36,17 @@ jobs:
         working-directory: ./client
         run: npm ci
 
+      - name: Seed Database
+        working-directory: ./server
+        env:
+          TEST_ADMIN_USERNAME: 'admin'
+          TEST_ADMIN_PASSWORD: 'admin123'
+        run: node seed.js
+
       - name: Start server
         working-directory: ./server
         env:
           PORT: 7410
-          DATEBASE_URI: ${{ secrets.DATABASE_URI }}
           ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
         run: |
           npm run dev > server.log 2>&1 &
@@ -45,7 +57,7 @@ jobs:
         env:
           REACT_APP_BASE_URL: http://localhost:7410
         run: |
-          npm run dev -- --host 0.0.0.0 > client.log 2>&1 &
+          npm start -- --host 0.0.0.0 > client.log 2>&1 &
           echo $! > client.pid
 
       - name: Setup .NET
@@ -70,8 +82,8 @@ jobs:
         working-directory: ./E2ETestsWithPlaywright
         env:
           TestSettings__BaseUrl: http://localhost:3000
-          TestSettings__AdminUsername: ${{ secrets.TEST_ADMIN_USERNAME }}
-          TestSettings__AdminPassword: ${{ secrets.TEST_ADMIN_PASSWORD }}
+          TestSettings__AdminUsername: admin
+          TestSettings__AdminPassword: admin123
           TestSettings__ApiBaseUrl: http://localhost:7410
         run: dotnet test E2EwithPlaywright.csproj --no-build
 

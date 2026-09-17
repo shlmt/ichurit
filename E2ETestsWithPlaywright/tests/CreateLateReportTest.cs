@@ -1,10 +1,12 @@
 using E2EwithPlaywright.Pages;
-using E2EwithPlaywright.Tests;
+using E2EwithPlaywright.Infrastructure;
+using Microsoft.Playwright;
 
 
-namespace E2EwithPlaywright;
+namespace E2EwithPlaywright.Tests;
 
 [NonParallelizable]
+[Order(2)]
 [TestFixture]
 public class CreateLateReportTest : AuthenticatedBaseTest
 {
@@ -16,7 +18,7 @@ public class CreateLateReportTest : AuthenticatedBaseTest
         // Navigate to the page before waiting for elements to load
         await createLateReportPage.NavigateAndInitializeAsync();
 
-        await createLateReportPage.SelectFirstStudentAsync();
+        await createLateReportPage.SelectStudentAsync(E2ETestData.StudentName);
         await createLateReportPage.SelectLateTypeAsync("איחור מאושר");
         await createLateReportPage.FillCommentAsync("בדיקת happy path");
 
@@ -66,8 +68,8 @@ public class CreateLateReportTest : AuthenticatedBaseTest
     {
         var createLateReportPage = new CreateLateReportPage(Page);
         await createLateReportPage.NavigateAndInitializeAsync();
-        await createLateReportPage.SelectFirstStudentAsync();
-        await createLateReportPage.SelectLateTypeAsync("איחור");
+        await createLateReportPage.SelectStudentAsync(E2ETestData.StudentName);
+        await createLateReportPage.SelectLateTypeAsync("חיסור");
 
         var firstResponseTask = Page.WaitForResponseAsync(r => r.Url.Contains("/late") && r.Request.Method == "POST");
         await createLateReportPage.SubmitAsync();
@@ -76,11 +78,13 @@ public class CreateLateReportTest : AuthenticatedBaseTest
 
         var firstResponseBody = await firstResponse.JsonAsync();
         var createdId = firstResponseBody?.GetProperty("id").ToString();
-
+        await createLateReportPage.Toast.WaitForAsync(new LocatorWaitForOptions
+        {
+            State = WaitForSelectorState.Hidden
+        });
         try
         {
-            await createLateReportPage.SelectFirstStudentAsync();
-            await createLateReportPage.SelectLateTypeAsync("איחור");
+            await createLateReportPage.SelectStudentAsync(E2ETestData.StudentName);
 
             var duplicateResponseTask = Page.WaitForResponseAsync(r => r.Url.Contains("/late") && r.Request.Method == "POST");
             await createLateReportPage.SubmitAsync();
@@ -115,8 +119,7 @@ public class CreateLateReportTest : AuthenticatedBaseTest
     {
         var createLateReportPage = new CreateLateReportPage(Page);
         await createLateReportPage.NavigateAndInitializeAsync();
-        await createLateReportPage.SelectFirstStudentAsync();
-        await createLateReportPage.SelectLateTypeAsync("איחור מאושר");
+        await createLateReportPage.SelectStudentAsync(E2ETestData.StudentName);
         await createLateReportPage.FillCommentAsync(new string('א', 70));
 
         var responseTask = Page.WaitForResponseAsync(r => r.Url.Contains("/late") && r.Request.Method == "POST");

@@ -5,7 +5,7 @@ namespace E2EwithPlaywright.pages
     public abstract class BasePage
     {
         protected readonly IPage Page;
-        private ILocator Toast => Page.Locator(".p-toast-message");
+        public ILocator Toast => Page.Locator(".p-toast-message").Last;
         protected abstract string Url { get; }
 
         protected BasePage(IPage page)
@@ -27,7 +27,7 @@ namespace E2EwithPlaywright.pages
         {
             await Toast.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
             var severity = await Toast.GetAttributeAsync("class");
-            var detailLocator = Toast.Locator(".p-toast-detail");
+            var detailLocator = Toast.Locator(".p-toast-detail").Last;
             string message = await detailLocator.InnerTextAsync();
             return (message, severity);
         }

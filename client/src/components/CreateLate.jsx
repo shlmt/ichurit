@@ -82,7 +82,7 @@ const CreateLate = () => {
             setHour(new Date())
         }
         if (result.isError) {
-            toast.current.show({ severity: 'error', summary: result?.error?.data?.msg || 'ארעה שגיאה. נסה שוב מאוחר יותר', life: 3000 })
+            toast.current.show({ severity: 'error',summary:'ארעה שגיאה', detail: result?.error?.data?.msg || 'ארעה שגיאה. נסה שוב מאוחר יותר', life: 3000 })
         }
     }, [result])
 
