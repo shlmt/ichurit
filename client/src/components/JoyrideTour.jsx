@@ -112,16 +112,13 @@ const JoyrideTour = ({ start }) => {
 	}, [start])
 
 	const handleJoyrideCallback = (data) => {
-		const { status, index, type } = data
+		const { action, status, index, type } = data
 		const finished = [STATUS.FINISHED, STATUS.SKIPPED].includes(status)
 		if (finished) {
 			localStorage.setItem(TOUR_KEY, 'true')
 			setRun(false)
-			if (prevPath.current && location.pathname !== prevPath.current) {
-				navigate(prevPath.current)
-			}
 			setStepIndex(0)
-		} else if (type === 'step:after') {
+		} else if (type === 'step:after' && action !== 'close') {
 			const route = steps[index + 1]?.route
 			if (route && location.pathname !== route) {
 				navigate(route)
