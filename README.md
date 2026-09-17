@@ -20,6 +20,12 @@
 - ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) - **React**: ספרייה לפיתוח ממשק משתמש (UI) יעיל ורספונסיבי עם יכולת ניהול מדינות מתקדמת.
  - **RTK-Query**: מספקת ניהול מדינות מתקדם לביצוע קריאות API ולטיפול במידע המתקבל מהשרת.
  - **PrimeReact**: סט כלים מתקדם לעיצוב קומפוננטים מוכנים מראש המותאמים לצרכים כמו טבלאות, טפסים, וכפתורים בצורה מקצועית ונעימה לעין.
+
+### תשתית בדיקות E2E & CI
+
+תשתית בדיקות מקצה לקצה ב־Playwright ו־.NET NUnit, בארכיטקטורת Page-Object-Model.
+הבדיקות רצות אוטומטית באמצעות GitHub Actions בכל push לזיהוי רגרסיות.
+
 ---
 
 ## **תכונות עיקריות**
@@ -35,6 +41,8 @@
   - העלאה אוטומטית של כיתה.
   - מחיקה מהירה של מחזור כיתות ח'.
   - **סיור הדרכה אינטראקטיבי**: שימוש ב`react-joyride` ליצירת סיור הדרכה והיכרות עם המערכת.
+
+
 ## License
 This project is proprietary software. All rights are reserved.  
 It is permitted to use this software **for learning purposes only** without payment.  
