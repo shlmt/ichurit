@@ -1,0 +1,84 @@
+name: E2E Tests
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+
+jobs:
+  e2e:
+    name: Run E2E tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Install server dependencies
+        working-directory: ./server
+        run: npm ci
+
+      - name: Install client dependencies
+        working-directory: ./client
+        run: npm ci
+
+      - name: Start server
+        working-directory: ./server
+        env:
+          PORT: 7410
+          DATEBASE_URI: ${{ secrets.DATABASE_URI }}
+          ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+        run: |
+          npm run dev > server.log 2>&1 &
+          echo $! > server.pid
+
+      - name: Start client
+        working-directory: ./client
+        env:
+          REACT_APP_BASE_URL: http://localhost:7410
+        run: |
+          npm run dev -- --host 0.0.0.0 > client.log 2>&1 &
+          echo $! > client.pid
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore .NET dependencies
+        working-directory: ./E2ETestsWithPlaywright
+        run: dotnet restore E2EwithPlaywright.csproj
+      
+      - name: Build tests
+        working-directory: ./E2ETestsWithPlaywright
+        run: dotnet build E2EwithPlaywright.csproj --no-restore
+
+      - name: Install Playwright browsers
+        working-directory: ./E2ETestsWithPlaywright
+        run: |
+          pwsh bin/Debug/net10.0/playwright.ps1 install --with-deps
+
+      - name: Run E2E tests
+        working-directory: ./E2ETestsWithPlaywright
+        env:
+          TestSettings__BaseUrl: http://localhost:3000
+          TestSettings__AdminUsername: ${{ secrets.TEST_ADMIN_USERNAME }}
+          TestSettings__AdminPassword: ${{ secrets.TEST_ADMIN_PASSWORD }}
+          TestSettings__ApiBaseUrl: http://localhost:7410
+        run: dotnet test E2EwithPlaywright.csproj --no-build
+
+      - name: Print logs on failure
+        if: failure()
+        run: |
+          echo "=== Server Log ==="
+          cat server/server.log || true
+          echo "=== Client Log ==="
+          cat client/client.log || true
