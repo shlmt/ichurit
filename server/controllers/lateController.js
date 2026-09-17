@@ -120,7 +120,7 @@ const addLate = async (req,res,next) => {
         const late = await Late.create({ student: studentId, time, type, comment,user:req.user._id })
         if (!late)
             return res.status(503).json({ msg: 'ארעה שגיאה בהוספת החריגה' })
-        return res.status(201).json({ msg: 'חריגות נוכחות נוספו בהצלחה' })
+        return res.status(201).json({ msg: 'חריגות נוכחות נוספו בהצלחה', id: late._id })
     }
     catch(err){
         next(err)
@@ -173,7 +173,7 @@ const deleteLate = async (req,res,next) => {
             return res.status(404).json({ msg: 'החריגה המבוקשת לא נמצאה' })
         const msg = `ה${late.type} נמחק בהצלחה`
         const del = await late.deleteOne()
-        res.status(204).json({ msg })
+        res.status(201).json({ msg })
     }
     catch(err){
         next(err)

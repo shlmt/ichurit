@@ -120,6 +120,7 @@ const Students = () => {
                         value={viewName}
                         style={{ textAlign: 'center' }}
                         placeholder='חיפוש תלמידה'
+                        field="name"
                         suggestions={filteredStudents} completeMethod={searchStudent}
                         itemTemplate={itemTemplateS}
                         onChange={(e) => {
@@ -149,6 +150,7 @@ const Students = () => {
                     value={viewClass}
                     style={{ textAlign: 'center' }}
                     placeholder='כיתה'
+                    field="grade"
                     suggestions={filteredClasses} completeMethod={searchClass}
                     itemTemplate={itemTemplateC}
                     onChange={(e) => {

@@ -59,11 +59,12 @@ const Login = () => {
                 <i className="pi pi-user" />
                 <InputText
                     value={username}
+                    id='username'
                     type='text'
                     placeholder="שם משתמש"
                     style={{ width: '100%' }} 
                     onChange={(e) => setUsername(e.target.value)}
-                    onKeyDown={(e) => {if(e.key=='Enter') handleSubmit(e)}} 
+                    onKeyDown={(e) => {if(e.key==='Enter') handleSubmit(e)}} 
                 />
             </span>
             <br />
@@ -76,11 +77,11 @@ const Login = () => {
                 toggleMask
                 style={{ marginBottom: '10px' }}
                 onChange={(e) => setPassword(e.target.value)} 
-                onKeyDown={(e) => {if(e.key=='Enter') handleSubmit(e)}} 
+                onKeyDown={(e) => {if(e.key==='Enter') handleSubmit(e)}} 
             />
             <br />
             <br />
-            <Button label="כניסה" onClick={handleSubmit}/>
+            <Button name='submit' label="כניסה" onClick={handleSubmit}/>
         </Card>
     </>)
 }

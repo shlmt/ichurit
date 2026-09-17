@@ -146,6 +146,7 @@ const LatesOfStudent = (props) => {
 
     useEffect(() => {
         if (resDel.isSuccess) {
+            console.log(resDel)
             toast.current.show({ severity: 'success', summary: resDel.data.msg, life: 3000 })
         }
         if (resDel.isError) {

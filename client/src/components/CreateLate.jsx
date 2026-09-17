@@ -115,6 +115,7 @@ const CreateLate = () => {
                 <AutoComplete
                     autoFocus
                     value={viewName}
+                    field="name" 
                     style={{ textAlign: 'center' }}
                     placeholder='חיפוש תלמידה'
                     suggestions={filteredStudents} completeMethod={search}
